@@ -1,0 +1,148 @@
+html,
+body {
+   margin:0;
+   padding:0;
+   height:100%;
+}
+#container {
+   min-height:100%;
+   position:relative;
+}
+#body {
+   padding:10px;
+   padding-bottom:5em;   /* Height of the footer */
+}
+#footer {
+   position:absolute;
+   bottom:0;
+   width:100%;
+   height:5em;   /* Height of the footer */
+   background:#1173BD;
+   color:#FFF
+}
+
+.menu {
+  float: right;
+  padding: 20px;
+  color: #888;
+  text-decoration: none;
+  padding-bottom: 10px;
+}
+.menu a {
+    color: #888;
+    text-decoration: none;
+    padding-bottom: 10px;
+    margin-left: 15px; 
+}
+.menu a:hover {
+    color: #1173BD;
+    border-bottom: #1173BD solid 4px;
+}
+.title {
+    color: #000;
+}
+
+.time {
+  color: #888;
+  padding: 0 20px;
+}
+
+.newInquiry {
+    padding: 15px;
+    margin: 20px 0;
+    border: 1px solid #fff;
+    border-left-width: 5px;
+}
+.bs-callout {
+    padding: 15px;
+    margin: 20px 0;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+    border-left-color: #428bca;
+}
+.bs-callout-left {
+    padding: 0 20px;
+    margin: 10px 0;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+    border-color: #fff;
+    border-left-color: #428bca;
+}
+
+
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #428bca;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #428bca;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+
+.myMessage {
+  background-color: #428bca;
+  color: #FFF;
+}
+
+.theirMessage {
+  background-color: #DDD;
+}
+
+.message{
+  width: 60%;
+  padding: .5em;
+}
