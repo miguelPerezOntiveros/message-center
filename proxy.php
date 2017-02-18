@@ -1,9 +1,5 @@
 <?php
-	session_start();
-	if(!isset($_SESSION['userName']) && basename($_SERVER["PHP_SELF"]) != 'logIn.php'){
-		header('Location: logIn.php');
-		exit();
-	}
+	include 'session.php';
 
 	if(!isset($_GET['service'])){
 		exit();
@@ -15,28 +11,19 @@
 	$url = "";
 	switch($_GET['service']){
 		case 'getThreads': 
-			$url = 'http://boomi-base22.com:9090/ws/rest/messages-center/thread';
+			$url = 'http://boomi-base22.com:9090/ws/rest/messages-center/thread?authorId='.urlencode($_SESSION['dn']);
+			error_log(  $url );
 		break;
 		case 'getMessages': 
-			$url = 'http://boomi-base22.com:9090/ws/rest/messages-center/message';
+			$url = 'http://boomi-base22.com:9090/ws/rest/messages-center/message?threadId='.$_GET['threadId'].'&own='.$_GET['own'].'&authorId='.urlencode($_SESSION['dn']);
 		break;
 		case 'postMessage': 
 			$url = 'http://boomi-base22.com:9090/ws/rest/messages-center/message';
-			$_SESSION['userName']
-			$_SESSION['type']
 			
-			$body = '{
-			  "threadId": 0,
-			  "authorId":"",
-			  "userid":"",
-			  "ownerId":"",
-			  "delegateId":"",
-			  "status": 1,
-			  "priority": 1,
-			  "subject":"",
-			  "message":"",
-			  "attachments":""
-			}';
+			$body = json_decode(@file_get_contents('php://input'), title);
+			$body['authorId'] = $_SESSION['dn'];
+			$body = json_encode($body);
+		
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $body);                                                                  
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
 				    'Content-Type: application/json',                                                                                
@@ -48,9 +35,8 @@
 	};
 
 	curl_setopt($ch, CURLOPT_URL, $url);
-
 	$result = curl_exec($ch);
-	echo '{ "data":'.$result.'}';
+	echo $result;
 
 	echo curl_error( $ch );
 	curl_close($ch);

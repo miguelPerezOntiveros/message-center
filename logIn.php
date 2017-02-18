@@ -12,24 +12,25 @@
 			$ohash = substr($ohash, 0, 20);
 			$nhash = pack("H*", sha1($_POST['password'].$osalt));
 
-			$res = '';
+			$ou = '';
 			foreach (explode(',', $data[0]["dn"]) as $entry) {
 				if(substr($entry, 0, 3) == 'ou='){
-					if(strlen($res) > 0)
-						$res .= ',';
-					$res .= substr($entry, 3);
+					if(strlen($ou) > 0)
+						$ou .= ',';
+					$ou .= substr($entry, 3);
 				}
 			}
 			
 			if($ohash == $nhash)
-				return $res;
+				return array($ou, $data[0]["dn"]);
 		}
-		return '';
+		return array();
 	}
 
 	session_start();
 	unset($_SESSION['userName']);
 	unset($_SESSION['type']);
+	unset($_SESSION['dn']);
 	session_destroy();
 
 	if($_POST['userName']!="" && $_POST['password']!=""){ // got userName
@@ -43,12 +44,14 @@
 			setcookie('userName', '',-3600);
 			$_COOKIE['userName'] = '';
 		}
-		if(strlen($type = checkPassword()) == 0) { $incorrectPassword = true; }
+		$ouAndDn = checkPassword();
+		if(count($ouAndDn) == 0) { $incorrectPassword = true; }
 		else //password is correct
 		{
 			session_start();
 			$_SESSION['userName']=$_POST['userName'];		
-			$_SESSION['type'] = $type;
+			$_SESSION['type'] = $ouAndDn[0];
+			$_SESSION['dn'] = $ouAndDn[1];
 			if($redirect = true){
 				header('Location: index.php');
 				exit();

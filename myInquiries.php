@@ -11,6 +11,8 @@
 			include 'myInquiries_employee.php';
 		else if($_SESSION['type'] == 'People')
 			include 'myInquiries_user.php';
+		else if($_SESSION['type'] == 'Supervisors')
+			include 'myInquiries_supervisor.php';
 	?>
 </body>
 </html>

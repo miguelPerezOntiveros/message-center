@@ -58,12 +58,12 @@
 	<script>
 		$(document).ready(function() {
 			var table = null;
-			function getThreads(own) {
+			function getThreads() {
 				if(table != null)
 					table.destroy();
 				table = $('#example').DataTable( {
 					"ajax": {
-			        	url: <?php echo '"proxy.php?service=getThreads&own='.own.'"'; ?>,
+			        	url: "proxy.php?service=getThreads",
 			      		dataSrc: function (json) { return json; }
 					},
 					"columns": [
@@ -74,7 +74,7 @@
 			            { data: "status" },
 			            { data: "priority" },
 			            { data: "hasAttachments" },
-			            { data: null, render: function (data, type, full, meta) {return ''; }}
+			            { data: null, render: function (data, type, full, meta) {return '<button type="button" id="'+ full.id+'" class="btn btn-primary glyphicon glyphicon-ok"></button>'; }}
 			        ],
 			        "columnDefs": [{
 		                "targets": [0, 6],
@@ -97,11 +97,11 @@
 			$('#checkbox').change(function () {
 			    if ($(this).is(":checked")) {
 					$('#displaying').text('Displaying only items assiged to you.');
-					getThreads(true);
+					getThreads();
 			    }
 		        else {
 					$('#displaying').text('Displaying all unassigned items.');
-					getThreads(false);
+					getThreads();
 		        }
 			});
 			$('#checkbox').click();

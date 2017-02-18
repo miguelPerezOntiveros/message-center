@@ -18,7 +18,7 @@
 					<br><br><br>
 					
 					This is the Secure Messages Proof of Concept.<br>
-					<?php echo 'You are '.$_SESSION['userName'].' from the group '.$_SESSION['type'].'.'; ?>
+					<?php echo 'You are '.$_SESSION['userName'].' from the group '.$_SESSION['type'].'. dn>'.$_SESSION['dn']; ?>
 					<br><br><br>
 					<img src="diagram.png">
 				</div>
