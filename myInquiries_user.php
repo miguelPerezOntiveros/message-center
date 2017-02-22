@@ -86,15 +86,16 @@
 			$('.formToToggle').toggle();
 
 			var table = null;
-			function getThreads() {
+			function getThreads() {				
 				if(table != null)
 					table.destroy();
 
 				table = $('#example').DataTable( {
 			        "ajax": {
 			        	url: "proxy.php?service=getThreads",
-			      		dataSrc: function (json) { return json; }
+			      		dataSrc: function (json) { console.log(json); return json; }
 					},
+					"order": [[ 3, "desc" ]],
 			        "columns": [
 			            { data: "id" },
 			            { data: "ownerUid", "defaultContent": "" },

@@ -16,11 +16,13 @@
 					</div>
 					<br><br><br>
 					<br><br><br>
-					
-					This is the Secure Messages Proof of Concept.<br>
-					<?php echo 'You are '.$_SESSION['userName'].' from the group '.$_SESSION['type'].'. dn>'.$_SESSION['dn']; ?>
-					<br><br><br>
-					<img src="diagram.png">
+					<div class="col-lg-12">
+						<?php echo 'You are <b>'.$_SESSION['userName'].'</b>, from the <b>'.$_SESSION['type'].'</b> group. DN: <b>'.$_SESSION['dn'].'</b>'; ?>
+					</div>
+					<br><br>
+					<div class="col-lg-10 col-lg-offset-1">
+						<img src="diagram.png" width="100%">
+					</div>
 				</div>
 			</div>
 		</div> <!--id = "body"-->

@@ -89,6 +89,7 @@
 
 						if ( aData['status'] == 'Open' || aData['status'] == 'Reopened' )
 								$('td:eq(5)', nRow).html( '<center><button type="button" id="action'+ aData['id'] +'" class="btn btn-default">Mark In Progress</button></center>' );
+							
 						if ( aData['status'] == 'In Progress' )
 								$('td:eq(5)', nRow).html( '<center><button type="button" id="action'+ aData['id'] +'" class="btn btn-default">Mark Resolved</button></center>' );
 				    }

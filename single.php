@@ -185,7 +185,7 @@
 						$('#chooseDelegate').removeClass('hidden');
 						$('#chooseStatus').removeClass('hidden');
 						$('#choosePriority').removeClass('hidden');
-						";
+					";
 			}
 		?>
 
@@ -204,8 +204,8 @@
 					target: '#messages',
 					customHandler: function(data) {
 						$.each(data, function(i, entry) { // this $.each is not included inside the $.mWidget implementation, if needed, it can be added like shown here. We know it will not allways be necessary.
-							entry.class = (entry.name == <?php echo "'".$_SESSION['userName']."'"; ?>? 'myMessage': 'theirMessage');
-							entry.align = (entry.name == <?php echo "'".$_SESSION['userName']."'"; ?>? 'right': 'left');
+							entry.class = (entry.authorUid == <?php echo "'".$_SESSION['dn']."'"; ?>? 'myMessage': 'theirMessage');
+							entry.align = (entry.authorUid == <?php echo "'".$_SESSION['dn']."'"; ?>? 'right': 'left');
 						});
 						return data;
 					}
@@ -304,16 +304,9 @@
 			data.attachment = $('#InquiryFile').val();
 
 			$.post( "proxy.php?service=postMessage", JSON.stringify(data), function(data) {
-				/*
-				var response = $.parseJSON(data).response;
-				if(response == 'ok'){
-					$('#humanModalMessage').text('Message sent successfully');
-					getMessages();
-				}
-				else
-					$('#humanModalMessage').text(response);
-				*/
 				modalAndReload(data);
+				$('#InquiryBody').val('');
+				$('#InquiryFile').val('');
 			});
 		});
 	</script>

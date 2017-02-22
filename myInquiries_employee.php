@@ -64,8 +64,9 @@
 				table = $('#example').DataTable( {
 					"ajax": {
 			        	url: <?php echo '"proxy.php?service=getThreads&own='.own.'"'; ?>,
-			      		dataSrc: function (json) { return json; }
+			      		dataSrc: function (json) { console.log(json); return json; }
 					},
+					"order": [[ 3, "desc" ]],
 					"columns": [
 			            { data: "id" },
 			            { data: "ownerUid", "defaultContent": "" },
@@ -81,7 +82,7 @@
 		                "visible": false
 		            }],
 					"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-						if ( (Math.floor(aData['seen']/4))%2 == 0 )
+						if ( (Math.floor(aData['seen']))%2 == 0 )
 							$('td', nRow).css( 'font-weight', 'bold');
 
 						if ( aData['hasAttachments'] == 1 && $('td:eq(1)', nRow).find('span').length == 0) 

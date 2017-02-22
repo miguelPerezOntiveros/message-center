@@ -17,7 +17,7 @@
 					<?php $hoverMenuLinkStyle = 'style="color: #1173BD; border-bottom: #1173BD solid 4px;"';
 					if(isset($_SESSION['userName'])){  ?>
 						<a href="index.php" <?php if(basename($_SERVER["PHP_SELF"]) == 'index.php') echo $hoverMenuLinkStyle;?> >Home</a>
-						<a href="myInquiries.php" <?php if(basename($_SERVER["PHP_SELF"]) == 'myInquiries.php' || basename($_SERVER["PHP_SELF"]) == 'single.php') echo $hoverMenuLinkStyle;?> >My Inquiries 4&nbsp;<span class="glyphicon glyphicon-envelope" aria-hidden="true"/></a>
+						<a href="myInquiries.php" <?php if(basename($_SERVER["PHP_SELF"]) == 'myInquiries.php' || basename($_SERVER["PHP_SELF"]) == 'single.php') echo $hoverMenuLinkStyle;?> >My Inquiries</a>
 					<?php
 					} ?>
 						<a href="logIn.php" <?php if(basename($_SERVER["PHP_SELF"]) == 'logIn.php') echo $hoverMenuLinkStyle;?> > <?php echo (isset($_SESSION['userName'])? 'Log Out': 'Log In'); ?></a>
