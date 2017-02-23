@@ -7,22 +7,25 @@
 	
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+	    'X-WSS-User-Id: '.urlencode($_SESSION['dn']),
+	    'X-WSS-User-Type: '.urlencode($_SESSION['type'])
+    ));
 
-	$url = "";
+	$base_url = "http://boomi-base22.com:9090/ws/rest/messages-center/";
 	switch($_GET['service']){
 		case 'getThreads': 
-			$url = 'http://boomi-base22.com:9090/ws/rest/messages-center/thread?authorId='.urlencode($_SESSION['dn']);
-			error_log(  $url );
+			$url = $base_url.'thread?own='.$_GET['own'];
 		break;
 		case 'getMessages': 
-			$url = 'http://boomi-base22.com:9090/ws/rest/messages-center/message?threadId='.$_GET['threadId'].'&own='.$_GET['own'].'&authorId='.urlencode($_SESSION['dn']);
+			$url = $base_url.'message?threadId='.$_GET['thread-id'];
 		break;
 		case 'postMessage': 
-			$url = 'http://boomi-base22.com:9090/ws/rest/messages-center/message';
+			$url = $base_url.'message';
 			
-			$body = json_decode(@file_get_contents('php://input'), title);
-			$body['authorId'] = $_SESSION['dn'];
-			$body = json_encode($body);
+			//$body = json_decode(@file_get_contents('php://input'), title);
+			//$body['author-id'] = $_SESSION['dn'];
+			//$body = json_encode($body);
 		
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $body);                                                                  
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          

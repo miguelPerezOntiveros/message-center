@@ -56,8 +56,8 @@
 		    						<input type='text' class="form-control" id="changeOwner"></textarea>
 		    					</div>
 								<div class="form-group">
-									<label for="changeMessage">Message</label>
-		    						<textarea class="form-control" id="changeMessage" rows="3" placeholder="Type a message"></textarea>
+									<label for="changeOwnerMessage">Message</label>
+		    						<textarea class="form-control" id="changeOwnerMessage" rows="3" placeholder="Type a message"></textarea>
 		    					</div>
 							</div>
 							<div class="modal-footer">
@@ -82,8 +82,8 @@
 		    						<input type='text' class="form-control" id="changeDelegate"></textarea>
 		    					</div>
 								<div class="form-group">
-									<label for="changeMessage">Message</label>
-		    						<textarea class="form-control" id="changeMessage" rows="3" placeholder="Type a message"></textarea>
+									<label for="changeDelegateMessage">Message</label>
+		    						<textarea class="form-control" id="changeDelegateMessage" rows="3" placeholder="Type a message"></textarea>
 		    					</div>
 							</div>
 							<div class="modal-footer">
@@ -107,8 +107,8 @@
 		    						<input type='text' class="form-control" id="changePriority"></textarea>
 		    					</div>
 								<div class="form-group">
-									<label for="changeMessage">Message</label>
-		    						<textarea class="form-control" id="changeMessage" rows="3" placeholder="Type a message"></textarea>
+									<label for="changePriorityMessage">Message</label>
+		    						<textarea class="form-control" id="changePriorityMessage" rows="3" placeholder="Type a message"></textarea>
 		    					</div>
 							</div>
 							<div class="modal-footer">
@@ -132,8 +132,8 @@
 		    						<input type='text' class="form-control" id="changeStatus"></textarea>
 		    					</div>
 								<div class="form-group">
-									<label for="changeMessage">Message</label>
-		    						<textarea class="form-control" id="changeMessage" rows="3" placeholder="Type a message"></textarea>
+									<label for="changeStatusMessage">Message</label>
+		    						<textarea class="form-control" id="changeStatusMessage" rows="3" placeholder="Type a message"></textarea>
 		    					</div>
 							</div>
 							<div class="modal-footer">
@@ -204,8 +204,19 @@
 					target: '#messages',
 					customHandler: function(data) {
 						$.each(data, function(i, entry) { // this $.each is not included inside the $.mWidget implementation, if needed, it can be added like shown here. We know it will not allways be necessary.
-							entry.class = (entry.authorUid == <?php echo "'".$_SESSION['dn']."'"; ?>? 'myMessage': 'theirMessage');
-							entry.align = (entry.authorUid == <?php echo "'".$_SESSION['dn']."'"; ?>? 'right': 'left');
+							if( entry.authorUid == <?php echo "'".$_SESSION['dn']."'"; ?> ) {
+								if( entry.isSystemMessage == 0) {
+							        entry.class = 'myMessage';
+						        	entry.align = 'right';
+								}
+								else {
+							        entry.class = 'systemMessage';
+							        entry.align = 'center';
+								}
+							} else {
+							        entry.class = 'theirMessage';
+							        entry.align = 'left';
+							}
 						});
 						return data;
 					}
@@ -236,7 +247,7 @@
 			var data = {};
 			data.threadId = <?php echo $_GET['id']; ?>;
 			data.delegateId = $('#changeDelegate').val();
-			data.message = $('#changeMessage').val();
+			data.message = $('#changeDelegateMessage').val();
 			data.isSystemMessage = 1;
 
 			$.post( "proxy.php?service=postMessage", JSON.stringify(data), function(data) {
@@ -249,7 +260,7 @@
 			var data = {};
 			data.threadId = <?php echo $_GET['id']; ?>;
 			data.ownerId = $('#changeOwner').val();
-			data.message = $('#changeMessage').val();
+			data.message = $('#changeOwnerMessage').val();
 			data.isSystemMessage = 2;			
 
 			$.post( "proxy.php?service=postMessage", JSON.stringify(data), function(data) {
@@ -262,7 +273,7 @@
 			var data = {};
 			data.threadId = <?php echo $_GET['id']; ?>;
 			data.priority = $('#changePriority').val();
-			data.message = $('#changeMessage').val();
+			data.message = $('#changePriorityMessage').val();
 			data.isSystemMessage = 3;	
 
 			$.post( "proxy.php?service=postMessage", JSON.stringify(data), function(data) {
@@ -275,7 +286,7 @@
 			var data = {};
 			data.threadId = <?php echo $_GET['id']; ?>;
 			data.status = $('#changeStatus').val();
-			data.message = $('#changeMessage').val();
+			data.message = $('#changeStatusMessage').val();
 			data.isSystemMessage = 4;
 
 			$.post( "proxy.php?service=postMessage", JSON.stringify(data), function(data) {

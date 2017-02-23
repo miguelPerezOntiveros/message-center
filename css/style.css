@@ -135,11 +135,19 @@ input:checked + .slider:before {
 
 .myMessage {
   background-color: #428bca;
+  text-align:left;
   color: #FFF;
 }
 
 .theirMessage {
   background-color: #DDD;
+  text-align:left;
+}
+
+.systemMessage {
+  background-color: #57ea5c;
+  text-align: center;
+  width: 100%;
 }
 
 .message{
