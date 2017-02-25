@@ -152,12 +152,12 @@
 						<form id="newMessageForm">
 							<div class="form-group">
 								<label for="InquiryBody">New message</label>
-	    						<textarea class="form-control" id="InquiryBody" rows="3" placeholder="Type a message" required=""></textarea>
+	    						<textarea class="form-control" name="messaeg" id="InquiryBody" rows="3" placeholder="Type a message" required=""></textarea>
 	    					</div>
 	    					<div class="form-group">
 								<label for="InquiryFile">Attachment</label><br>
 								<label class="btn btn-default btn-file">
-								    Browse <input type="file" id="InquiryFile" style="display: none;">
+								    Browse <input type="file" name="attachment" id="InquiryFile" style="display: none;">
 								</label> <span id='label'></span>
 	    					</div>
 	    					<button style='float:right;' type="submit" class="btn btn-primary">Submit</button>
@@ -203,20 +203,36 @@
 					},
 					target: '#messages',
 					customHandler: function(data) {
+				        var defaultMessages = [
+				        						'default message for delegate change',
+										        'default message for owner change', 
+										        'default message for priority change', 
+										        'default message for status change'
+										      ];
+
 						$.each(data, function(i, entry) { // this $.each is not included inside the $.mWidget implementation, if needed, it can be added like shown here. We know it will not allways be necessary.
-							if( entry.authorUid == <?php echo "'".$_SESSION['dn']."'"; ?> ) {
-								if( entry.isSystemMessage == 0) {
-							        entry.class = 'myMessage';
-						        	entry.align = 'right';
-								}
-								else {
-							        entry.class = 'systemMessage';
-							        entry.align = 'center';
-								}
+					        if(entry.isSystemMessage != 0){
+						        entry.class = 'systemMessage';
+						        entry.align = 'center';
+					        	if(!entry.message)
+					        		entry.message = defaultMessages[entry.isSystemMessage-1];
+					        } else if( entry.authorUid == <?php echo "'".$_SESSION['dn']."'"; ?> ) {
+							    entry.class = 'myMessage';
+					        	entry.align = 'right';
 							} else {
 							        entry.class = 'theirMessage';
 							        entry.align = 'left';
 							}
+							if(entry.attachments){
+								var res = '<hr><b>Attachment(s):&nbsp;</b>';
+								entry.attachments.split(',').forEach(function(e){
+									res += '<a class="attachments">'+e+'</a>, ';									
+								})
+								res = res.substring(0, res.length-2);
+								entry.attachments = res;
+							}
+							else
+								entry.attachments = '';
 						});
 						return data;
 					}
@@ -308,7 +324,7 @@
 
 		$('#newMessageForm').on('submit', function(e){
 			e.preventDefault();
-
+			/*
 			var data = {};
 			data.threadId = <?php echo $_GET['id']; ?>;
 			data.message = $('#InquiryBody').val();
@@ -318,6 +334,23 @@
 				modalAndReload(data);
 				$('#InquiryBody').val('');
 				$('#InquiryFile').val('');
+			});
+			*/
+			var formData = new FormData($('#newMessageForm')[0]);
+			formData.append('file', $('#InquiryFile')[0].files[0]);
+			formData.append('threadId', <?php echo "'".$_GET['id']."'"; ?>);
+			
+			$.ajax({
+				type: "POST",
+				url: "proxy.php?service=postMessage",
+				data: formData,
+				success: function(response) {
+					modalAndReload(response);
+					$('#InquiryBody').val('');
+					$('#InquiryFile').val('');
+				},
+				contentType: false,
+    			processData: false
 			});
 		});
 	</script>

@@ -137,21 +137,30 @@ input:checked + .slider:before {
   background-color: #428bca;
   text-align:left;
   color: #FFF;
+  width: 60%;
+}
+
+.myMessage a {
+  color: white;
 }
 
 .theirMessage {
   background-color: #DDD;
   text-align:left;
+  width: 60%;
+}
+
+.theirMessage hr {
+  border-color: #000;
 }
 
 .systemMessage {
-  background-color: #57ea5c;
+  background-color: #73d476;
   text-align: center;
-  width: 100%;
+  width: 90%;
 }
 
 .message{
-  width: 60%;
   padding: .5em;
 }
 

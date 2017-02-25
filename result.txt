@@ -1,0 +1,233 @@
+New connection! (50)
+/var/www/html/ws.php:99
+Guzzle\Http\Message\EntityEnclosingRequest#1
+{
+  [*:expectCutoff] => 1048576
+  [*:body] => Guzzle\Http\EntityBody#2
+  {
+    [*:contentEncoding] => false
+    [*:rewindFunction] => null
+    [*:stream] => [resource]
+    [*:size] => 0
+    [*:cache] => array(9)
+    {
+      [wrapper_type] => "PHP"
+      [stream_type] => "TEMP"
+      [mode] => "w+b"
+      [unread_bytes] => 0
+      [seekable] => true
+      [uri] => "php://temp"
+      [is_local] => true
+      [is_readable] => true
+      [is_writable] => true
+    }
+    [*:customData] => array(0) {}
+  }
+  [*:postFields] => Guzzle\Http\QueryString#3
+  {
+    [*:fieldSeparator] => "&"
+    [*:valueSeparator] => "="
+    [*:urlEncode] => "RFC 3986"
+    [*:aggregator] => null
+    [*:data] => array(0) {}
+  }
+  [*:postFiles] => array(0) {}
+  [*:eventDispatcher] => null
+  [*:url] => Guzzle\Http\Url#4
+  {
+    [*:scheme] => "http"
+    [*:host] => "127.0.0.1"
+    [*:port] => 8082
+    [*:username] => null
+    [*:password] => null
+    [*:path] => "/"
+    [*:fragment] => null
+    [*:query] => Guzzle\Http\QueryString#5
+    {
+      [*:fieldSeparator] => "&"
+      [*:valueSeparator] => "="
+      [*:urlEncode] => "RFC 3986"
+      [*:aggregator] => null
+      [*:data] => array(0) {}
+    }
+  }
+  [*:method] => "GET"
+  [*:client] => null
+  [*:response] => null
+  [*:responseBody] => null
+  [*:state] => "new"
+  [*:username] => null
+  [*:password] => null
+  [*:curlOptions] => Guzzle\Common\Collection#6
+  {
+    [*:data] => array(0) {}
+  }
+  [*:isRedirect] => false
+  [*:headers] => Guzzle\Http\Message\Header\HeaderCollection#7
+  {
+    [*:headers] => array(15)
+    {
+      [host] => Guzzle\Http\Message\Header#8
+      {
+        [*:values] => array(1)
+        {
+          [0] => "127.0.0.1:8082"
+        }
+        [*:header] => "Host"
+        [*:glue] => ","
+      }
+      [user-agent] => Guzzle\Http\Message\Header#9
+      {
+        [*:values] => array(1)
+        {
+          [0] => "Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0"
+        }
+        [*:header] => "User-Agent"
+        [*:glue] => ","
+      }
+      [accept] => Guzzle\Http\Message\Header#10
+      {
+        [*:values] => array(1)
+        {
+          [0] => "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+        }
+        [*:header] => "Accept"
+        [*:glue] => ","
+      }
+      [accept-language] => Guzzle\Http\Message\Header#11
+      {
+        [*:values] => array(1)
+        {
+          [0] => "en-US,en;q=0.5"
+        }
+        [*:header] => "Accept-Language"
+        [*:glue] => ","
+      }
+      [accept-encoding] => Guzzle\Http\Message\Header#12
+      {
+        [*:values] => array(1)
+        {
+          [0] => "gzip, deflate"
+        }
+        [*:header] => "Accept-Encoding"
+        [*:glue] => ","
+      }
+      [sec-websocket-version] => Guzzle\Http\Message\Header#13
+      {
+        [*:values] => array(1)
+        {
+          [0] => "13"
+        }
+        [*:header] => "Sec-WebSocket-Version"
+        [*:glue] => ","
+      }
+      [origin] => Guzzle\Http\Message\Header#14
+      {
+        [*:values] => array(1)
+        {
+          [0] => "http://127.0.0.1"
+        }
+        [*:header] => "origin"
+        [*:glue] => ","
+      }
+      [sec-websocket-extensions] => Guzzle\Http\Message\Header#15
+      {
+        [*:values] => array(1)
+        {
+          [0] => "permessage-deflate"
+        }
+        [*:header] => "Sec-WebSocket-Extensions"
+        [*:glue] => ","
+      }
+      [sec-websocket-key] => Guzzle\Http\Message\Header#16
+      {
+        [*:values] => array(1)
+        {
+          [0] => "5zp1I9CQN+HTr8h6rt9PDA=="
+        }
+        [*:header] => "Sec-WebSocket-Key"
+        [*:glue] => ","
+      }
+      [cookie] => Guzzle\Http\Message\Header#17
+      {
+        [*:values] => array(1)
+        {
+          [0] => "PHPSESSID=5ti6nhvd2dp3b6n691e2cbm0d3; username=John Doe"
+        }
+        [*:header] => "Cookie"
+        [*:glue] => ","
+      }
+      [connection] => Guzzle\Http\Message\Header#18
+      {
+        [*:values] => array(1)
+        {
+          [0] => "keep-alive, Upgrade"
+        }
+        [*:header] => "Connection"
+        [*:glue] => ","
+      }
+      [pragma] => Guzzle\Http\Message\Header#19
+      {
+        [*:values] => array(1)
+        {
+          [0] => "no-cache"
+        }
+        [*:header] => "Pragma"
+        [*:glue] => ","
+      }
+      [cache-control] => Guzzle\Http\Message\Header\CacheControl#20
+      {
+        [*:directives] => null
+        [*:values] => array(1)
+        {
+          [0] => "no-cache"
+        }
+        [*:header] => "Cache-Control"
+        [*:glue] => ","
+      }
+      [upgrade] => Guzzle\Http\Message\Header#21
+      {
+        [*:values] => array(1)
+        {
+          [0] => "websocket"
+        }
+        [*:header] => "Upgrade"
+        [*:glue] => ","
+      }
+      [content-length] => Guzzle\Http\Message\Header#22
+      {
+        [*:values] => array(1)
+        {
+          [0] => 0
+        }
+        [*:header] => "Content-Length"
+        [*:glue] => ","
+      }
+    }
+  }
+  [*:headerFactory] => Guzzle\Http\Message\Header\HeaderFactory#23
+  {
+    [*:mapping] => array(2)
+    {
+      [cache-control] => "Guzzle\Http\Message\Header\CacheControl"
+      [link] => "Guzzle\Http\Message\Header\Link"
+    }
+  }
+  [*:params] => Guzzle\Common\Collection#24
+  {
+    [*:data] => array(0) {}
+  }
+  [*:protocol] => "HTTP"
+  [*:protocolVersion] => "1.1"
+}/var/www/html/ws.php:100
+Ratchet\WebSocket\Version\RFC6455\Connection#1
+{
+  [*:wrappedConn] => Ratchet\Server\IoConnection#2
+  {
+    [*:conn] => React\Socket\Connection {...}
+    [resourceId] => 50
+    [remoteAddress] => "127.0.0.1"
+    [httpHeadersReceived] => true
+    [WebSocket] => stdClass {...}
+  }
+}Connection 50 sending message "hello" to 0 other connections

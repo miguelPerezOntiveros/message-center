@@ -4,7 +4,7 @@
 			ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
 	  		$ldapbind = ldap_bind($ldapconn, 'cn=root,dc=boomi-base22,dc=com', 'Bas3two2') or die ("Error trying to bind: ".ldap_error($ldapconn));
 			
-			$result = ldap_search($ldapconn,"DC=boomi-base22,DC=com", "(cn=".$_POST['userName'].")") or die ("Error in search query: ".ldap_error($ldapconn));
+			$result = ldap_search($ldapconn, "ou=users,DC=boomi-base22,DC=com", "(cn=".$_POST['userName'].")") or die ("Error in search query: ".ldap_error($ldapconn));
 			$data = ldap_get_entries($ldapconn, $result);
 
 			$ohash = base64_decode(substr($data[0]["userpassword"][0], 6));
@@ -12,17 +12,13 @@
 			$ohash = substr($ohash, 0, 20);
 			$nhash = pack("H*", sha1($_POST['password'].$osalt));
 
-			$ou = '';
-			foreach (explode(',', $data[0]["dn"]) as $entry) {
-				if(substr($entry, 0, 3) == 'ou='){
-					if(strlen($ou) > 0)
-						$ou .= ',';
-					$ou .= substr($entry, 3);
-				}
-			}
-			
+		
+			$result = ldap_search($ldapconn, "ou=users,DC=boomi-base22,DC=com", "(member=uid=".$data[0]["uid"][0].",ou=users,dc=boomi-base22,dc=com)") or die ("Error in search query: ".ldap_error($ldapconn));
+			$groupData = ldap_get_entries($ldapconn, $result);
+			$type = $groupData[0]['cn'][0];
+				
 			if($ohash == $nhash)
-				return array($ou, $data[0]["dn"]);
+				return array($type, $data[0]["dn"]);
 		}
 		return array();
 	}
@@ -34,24 +30,14 @@
 	session_destroy();
 
 	if($_POST['userName']!="" && $_POST['password']!=""){ // got userName
-		if ($_POST['remember'] == 1) // got remember
-		{
-			setcookie('userName', $_POST['userName'], time()+2592000);
-			$_COOKIE['userName'] = $_POST['userName']; 
-		}
-		else
-		{
-			setcookie('userName', '',-3600);
-			$_COOKIE['userName'] = '';
-		}
-		$ouAndDn = checkPassword();
-		if(count($ouAndDn) == 0) { $incorrectPassword = true; }
+		$typeAndDn = checkPassword();
+		if(count($typeAndDn) == 0) { $incorrectPassword = true; }
 		else //password is correct
 		{
 			session_start();
 			$_SESSION['userName']=$_POST['userName'];		
-			$_SESSION['type'] = $ouAndDn[0];
-			$_SESSION['dn'] = $ouAndDn[1];
+			$_SESSION['type'] = $typeAndDn[0];
+			$_SESSION['dn'] = $typeAndDn[1];
 			if($redirect = true){
 				header('Location: index.php');
 				exit();
@@ -87,11 +73,34 @@
 						</div>';
 					}
 				?>
-				<form method="post" action=<?="'".basename($_SERVER['SCRIPT_NAME'])."'"?>>
-					<p><input type="text" name="userName" placeholder="Username" required></p>
-					<p><input type="password" name="password" placeholder="Password" required></p>
-					<p><input type="submit" value="Log In"></p>
-				</form>
+				<div class="row">
+					<div class="col-lg-4 bs-callout-left col-lg-offset-4" style='background-color: #DDD'>
+						</br></br>
+						<form method="post" action=<?="'".basename($_SERVER['SCRIPT_NAME'])."'"?>>
+							<!-- <div class="form-group">
+								<label for="disabledTextInput">Disabled input</label>
+								<input type="text" id="disabledTextInput" class="form-control" placeholder="Disabled input">
+							</div>
+
+							<div class="form-group">
+								<label for="exampleInputFile">User Name</label>
+								<input type="text" class="form-control-file" id="username">
+								<small id="fileHelp" class="form-text text-muted">This is some placeholder block-level help text for the above input. It's a bit lighter and easily wraps to a new line.</small>
+							</div>
+ -->
+							<p><input style="width: 100%" type="text" name="userName" placeholder="Username" required></p>
+							<p><input style="width: 100%" type="password" name="password" placeholder="Password" required></p>
+							<br><br>
+							<p>	
+							<input type="submit" name="submit">
+								<button style="width: 100%" type="button" class="btn btn-success">Log In</button>
+								<br><br>
+								<button style="width: 100%" type="button" class="btn btn-warning">Create Account</button>
+							</p>
+							<br>
+						</form>
+					</div>
+				</div>
 			</div>
 		</div> <!--id = "body"-->
 		<?php include 'foot.php';?>
