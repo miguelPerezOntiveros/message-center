@@ -34,7 +34,7 @@
 						<a id="chooseStatus" onclick='$("#statusModal").modal("show");' class="hidden"><button style="width: 100%;" type="button" class="btn btn-primary">Change Status</button></a>
 					</div>
 					<div class="col-lg-2 newInquiry" align="right">
-						<a id="assignToMe"><button style="width: 100%;" type="button" class="btn btn-primary">Assign to me</button></a>
+						<a id="assignToMe" class="hidden"><button style="width: 100%;" type="button" class="btn btn-primary">Assign to me</button></a>
 					</div>
 				</div>
 
@@ -146,13 +146,17 @@
 
 				<div class="row">
 					<div class="col-lg-12" style='border-left-width: 5px; padding-left: 20px;'>
+						<div>
+							<span id='csr'></span><br>
+							<span id='delegate'></span><br><br>
+						</div>
 						<div id="messages" style='border: 1px solid #DDD; background-color: #f8f8f8; padding: 1em;'></div>
 					</div>
 					<div class="col-lg-12 bs-callout">
 						<form id="newMessageForm">
 							<div class="form-group">
 								<label for="InquiryBody">New message</label>
-	    						<textarea class="form-control" name="messaeg" id="InquiryBody" rows="3" placeholder="Type a message" required=""></textarea>
+	    						<textarea class="form-control" name="message" id="InquiryBody" rows="3" placeholder="Type a message" required=""></textarea>
 	    					</div>
 	    					<div class="form-group">
 								<label for="InquiryFile">Attachment</label><br>
@@ -192,12 +196,21 @@
 		var message = null;
 		function getMessages(){
 			$.get(<?php echo '"proxy.php?service=getMessages&threadId='.$_GET['id'].'"'; ?>, function( data ) {
-				console.log('got messages:'+data);
 				message = $.parseJSON(data);
 
+				console.log('%o',message);
+
+				if(!message[0] || !message[0].csr)
+					$('#assignToMe').removeClass('hidden');
+				else
+					$('#csr').html('CSR working on this thread: <b>'+message[0].csr+'</b>.');
+				if(message[0] && message[0].delegate)
+					$('#delegate').html('This thread is currently being delegated to: <b>'+message[0].delegate+'</b>.');
+				
 				$('#messages').html('');
+				if(message[0])
 				$.mWidget({
-					data: message,
+					data: message[0].messages,
 					tplAjax: {
 						url: 'messageTpl.html'
 					},
@@ -216,7 +229,7 @@
 						        entry.align = 'center';
 					        	if(!entry.message)
 					        		entry.message = defaultMessages[entry.isSystemMessage-1];
-					        } else if( entry.authorUid == <?php echo "'".$_SESSION['dn']."'"; ?> ) {
+					        } else if( entry.author == <?php echo "'".$_SESSION['userName'].' '.$_SESSION['sn']."'"; ?> ) {
 							    entry.class = 'myMessage';
 					        	entry.align = 'right';
 							} else {
@@ -245,9 +258,11 @@
 			msg = JSON.parse(msg);
 			if(msg.error){
 				$('#humanModalMessage').html('<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><span class="sr-only"></span>&nbsp;Error: '+msg.error+'</div>');
+				console.log(msg.error);
 			}
 			else{
-				$('#humanModalMessage').html('<div class="alert alert-success" role="alert"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span><span class="sr-only"></span>&nbsp;'+msg.success+'</div>');			
+				$('#humanModalMessage').html('<div class="alert alert-success" role="alert"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span><span class="sr-only"></span>&nbsp;'+msg.success+'</div>');
+				console.log(msg.success);		
 			}
 
 			$("#myModal").modal("show");
@@ -311,14 +326,14 @@
 		});
 
 		$('#assignToMe').click(function() {
-			$.post( "newMessage.txt", function( data ) {
-				var response = $.parseJSON(data).response;
-				if(response == 'ok') {
-					if($('#assignToMe').children(0).text() == 'Unassign myself')
-						$('#assignToMe').children(0).text('Assign to me');
-					else
-						$('#assignToMe').children(0).text('Unassign myself');
-				}
+			var data = {};
+			data.threadId = <?php echo $_GET['id']; ?>;
+			data.ownerId = <?php echo "'".$_SESSION['dn']."'"; ?>;
+			data.message = $('#changeOwnerMessage').val();
+			data.isSystemMessage = 2;			
+
+			$.post( "proxy.php?service=postMessage", JSON.stringify(data), function(data) {
+				modalAndReload(data);
 			});
 		});
 

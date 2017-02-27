@@ -12,13 +12,13 @@
 			$ohash = substr($ohash, 0, 20);
 			$nhash = pack("H*", sha1($_POST['password'].$osalt));
 
-		
 			$result = ldap_search($ldapconn, "ou=users,DC=boomi-base22,DC=com", "(member=uid=".$data[0]["uid"][0].",ou=users,dc=boomi-base22,dc=com)") or die ("Error in search query: ".ldap_error($ldapconn));
 			$groupData = ldap_get_entries($ldapconn, $result);
 			$type = $groupData[0]['cn'][0];
-				
+			
+			strtok($data[0]["dn"], '=');
 			if($ohash == $nhash)
-				return array($type, $data[0]["dn"]);
+				return array($type, strtok(','), $data[0]["sn"][0]);
 		}
 		return array();
 	}
@@ -27,17 +27,19 @@
 	unset($_SESSION['userName']);
 	unset($_SESSION['type']);
 	unset($_SESSION['dn']);
+	unset($_SESSION['sn']);
 	session_destroy();
 
 	if($_POST['userName']!="" && $_POST['password']!=""){ // got userName
-		$typeAndDn = checkPassword();
-		if(count($typeAndDn) == 0) { $incorrectPassword = true; }
+		$userInfo = checkPassword();
+		if(count($userInfo) == 0) { $incorrectPassword = true; }
 		else //password is correct
 		{
 			session_start();
 			$_SESSION['userName']=$_POST['userName'];		
-			$_SESSION['type'] = $typeAndDn[0];
-			$_SESSION['dn'] = $typeAndDn[1];
+			$_SESSION['type'] = $userInfo[0];
+			$_SESSION['dn'] = $userInfo[1];
+			$_SESSION['sn'] = $userInfo[2];
 			if($redirect = true){
 				header('Location: index.php');
 				exit();
@@ -76,24 +78,19 @@
 				<div class="row">
 					<div class="col-lg-4 bs-callout-left col-lg-offset-4" style='background-color: #DDD'>
 						</br></br>
-						<form method="post" action=<?="'".basename($_SERVER['SCRIPT_NAME'])."'"?>>
-							<!-- <div class="form-group">
-								<label for="disabledTextInput">Disabled input</label>
-								<input type="text" id="disabledTextInput" class="form-control" placeholder="Disabled input">
+						<form method="post" id='loginForm' action=<?="'".basename($_SERVER['SCRIPT_NAME'])."'"?>>
+							<div class="form-group">
+								<label for="userName">User name</label>
+								<input type="text" id="userName" name="userName" class="form-control" placeholder="User name">
 							</div>
 
 							<div class="form-group">
-								<label for="exampleInputFile">User Name</label>
-								<input type="text" class="form-control-file" id="username">
-								<small id="fileHelp" class="form-text text-muted">This is some placeholder block-level help text for the above input. It's a bit lighter and easily wraps to a new line.</small>
+								<label for="exampleInputFile">Password</label>
+								<input type="password" id="password" name="password" class="form-control" placeholder="Password">
 							</div>
- -->
-							<p><input style="width: 100%" type="text" name="userName" placeholder="Username" required></p>
-							<p><input style="width: 100%" type="password" name="password" placeholder="Password" required></p>
-							<br><br>
+							<br>
 							<p>	
-							<input type="submit" name="submit">
-								<button style="width: 100%" type="button" class="btn btn-success">Log In</button>
+								<button style="width: 100%" type="button" class="btn btn-success" onclick="$('#loginForm').submit();">Log In</button>
 								<br><br>
 								<button style="width: 100%" type="button" class="btn btn-warning">Create Account</button>
 							</p>
@@ -101,6 +98,13 @@
 						</form>
 					</div>
 				</div>
+				<script type="text/javascript">
+					$('.form-control').keypress(function(event) {
+					    if (event.keyCode == 13 || event.which == 13) {
+					        $('#loginForm').submit();
+					    }
+					});
+				</script>
 			</div>
 		</div> <!--id = "body"-->
 		<?php include 'foot.php';?>

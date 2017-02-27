@@ -1,0 +1,5 @@
+Sat Feb 25 00:40:37 CST 2017
+/opt/Boomi_AtomSphere/Atom/Atom_mikesAtom/bin/restart.sh: line 4: ./atom: No such file or directory
+Container Status: 127 (1)
+/opt/Boomi_AtomSphere/Atom/Atom_mikesAtom/bin/restart.sh: line 20: ./atom: No such file or directory
+Container Status: 127 (1)

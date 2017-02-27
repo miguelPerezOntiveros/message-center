@@ -17,7 +17,7 @@
 					<br><br><br>
 					<br><br><br>
 					<div class="col-lg-12">
-						<?php echo 'You are <b>'.$_SESSION['userName'].'</b>, from the <b>'.$_SESSION['type'].'</b> group. DN: <b>'.$_SESSION['dn'].'</b>'; ?>
+						<?php echo 'You are <b>'.$_SESSION['userName'].'</b>, from the <b>'.$_SESSION['type'].'</b> group. uid: <b>'.$_SESSION['dn'].'</b> sn: <b>'.$_SESSION['sn'].'</b>'; ?>
 					</div>
 					<br><br>
 					<div class="col-lg-10 col-lg-offset-1">
