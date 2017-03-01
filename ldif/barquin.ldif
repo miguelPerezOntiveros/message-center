@@ -1,0 +1,11 @@
+dn: uid=jorge.barquin,ou=users,dc=boomi-base22,dc=com
+objectclass: top
+objectclass: person
+objectclass: posixAccount
+userPassword: toBeChanged
+cn: Jorge Aurelio
+sn: Barquin Bravo
+uid: jorge.barquin
+uidNumber: 0
+gidNumber: 0
+homeDirectory:

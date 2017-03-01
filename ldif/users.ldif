@@ -1,0 +1,4 @@
+dn: ou=users,dc=boomi-base22,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: users

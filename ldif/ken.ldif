@@ -1,0 +1,11 @@
+dn: uid=ken.rokicki,ou=users,dc=boomi-base22,dc=com
+objectclass: top
+objectclass: person
+objectclass: posixAccount
+userPassword: toBeChanged
+cn: Ken Rokicki
+sn: Rokicki
+uid: ken.rokicki
+uidNumber: 0
+gidNumber: 0
+homeDirectory:

@@ -1,0 +1,11 @@
+dn: uid=luis.lozano,ou=users,dc=boomi-base22,dc=com
+objectclass: top
+objectclass: person
+objectclass: posixAccount
+userPassword: toBeChanged
+cn: Luis Fernando
+sn: Lozano Belaunzaran
+uid: luis.lozano
+uidNumber: 0
+gidNumber: 0
+homeDirectory:

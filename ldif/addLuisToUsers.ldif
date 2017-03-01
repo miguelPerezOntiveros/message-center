@@ -1,0 +1,4 @@
+dn: cn=supervisors,ou=users,dc=boomi-base22,dc=com
+changetype: modify
+add: member
+member: uid=luis.lozano,ou=users,dc=boomi-base22,dc=com

@@ -1,0 +1,4 @@
+dn: cn=hius,ou=users,dc=boomi-base22,dc=com
+changetype: modify
+add: member
+member: uid=jose.perez,ou=users,dc=boomi-base22,dc=com

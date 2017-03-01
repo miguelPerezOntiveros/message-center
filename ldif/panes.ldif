@@ -1,0 +1,11 @@
+dn: uid=jorge.panes,ou=users,dc=boomi-base22,dc=com
+objectclass: top
+objectclass: person
+objectclass: posixAccount
+userPassword: toBeChanged
+cn: Jorge Armando
+sn: Panes Fernandez
+uid: jorge.panes
+uidNumber: 0
+gidNumber: 0
+homeDirectory:

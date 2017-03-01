@@ -1,0 +1,131 @@
+==> addBarquinToCsrs.ldif <==
+dn: cn=csrs,ou=users,dc=boomi-base22,dc=com
+changetype: modify
+add: member
+member: uid=jorge.barquin,ou=users,dc=boomi-base22,dc=com
+
+==> addErnestoToCsrs.ldif <==
+dn: cn=csrs,ou=users,dc=boomi-base22,dc=com
+changetype: modify
+add: member
+member: uid=ernesto.rivera,ou=users,dc=boomi-base22,dc=com
+
+==> addKenToCsrs.ldif <==
+dn: cn=csrs,ou=users,dc=boomi-base22,dc=com
+changetype: modify
+add: member
+member: uid=ken.rokicki,ou=users,dc=boomi-base22,dc=com
+
+==> addMiguelToUsers.ldif <==
+dn: cn=hius,ou=users,dc=boomi-base22,dc=com
+changetype: modify
+add: member
+member: uid=jose.perez,ou=users,dc=boomi-base22,dc=com
+
+==> addPanesToCsrs.ldif <==
+dn: cn=csrs,ou=users,dc=boomi-base22,dc=com
+changetype: modify
+add: member
+member: uid=jorge.panes,ou=users,dc=boomi-base22,dc=com
+
+==> barquin.ldif <==
+dn: uid=jorge.barquin,ou=users,dc=boomi-base22,dc=com
+objectclass: top
+objectclass: person
+objectclass: posixAccount
+userPassword: toBeChanged
+cn: Jorge Aurelio
+sn: Barquin Bravo
+uid: jorge.barquin
+uidNumber: 0
+gidNumber: 0
+homeDirectory:
+
+==> csrs.ldif <==
+dn: cn=csrs,ou=Users,dc=boomi-base22,dc=com
+cn: csrs
+objectClass: groupOfNames
+member: 
+
+==> ernesto.ldif <==
+dn: uid=ernesto.rivera,ou=users,dc=boomi-base22,dc=com
+objectclass: top
+objectclass: person
+objectclass: posixAccount
+userPassword: toBeChanged
+cn: Ernesto Jesus
+sn: Rivera Lara
+uid: ernesto.rivera
+uidNumber: 0
+gidNumber: 0
+homeDirectory:
+
+==> hius.ldif <==
+dn: cn=hius,ou=Users,dc=boomi-base22,dc=com
+cn: hius
+objectClass: groupOfNames
+member:
+
+==> ken.ldif <==
+dn: uid=ken.rokicki,ou=users,dc=boomi-base22,dc=com
+objectclass: top
+objectclass: person
+objectclass: posixAccount
+userPassword: toBeChanged
+cn: Ken Rokicki
+sn: Rokicki
+uid: ken.rokicki
+uidNumber: 0
+gidNumber: 0
+homeDirectory:
+
+==> memberof.ldif <==
+dn: cn=module,cn=config
+cn: module
+objectClass: olcModuleList
+olcModuleLoad: memberof
+olcModulePath: /usr/lib/ldap
+
+dn: olcOverlay={0}memberof,olcDatabase={1}hdb,cn=config
+objectClass: olcConfig
+objectClass: olcMemberOf
+objectClass: olcOverlayConfig
+objectClass: top
+olcOverlay: memberof
+olcMemberOfDangling: ignore
+olcMemberOfRefInt: TRUE
+olcMemberOfGroupOC: groupOfNames
+olcMemberOfMemberAD: member
+olcMemberOfMemberOfAD: memberOf
+
+==> miguel.ldif <==
+dn: uid=jose.perez,ou=users,dc=boomi-base22,dc=com
+objectclass: top
+objectclass: person
+objectclass: posixAccount
+userPassword: toBeChanged
+cn: Jose Miguel
+sn: Perez Ontiveros
+uid: jose.perez
+uidNumber: 0
+gidNumber: 0
+homeDirectory:
+
+==> panes.ldif <==
+dn: uid=jorge.panes,ou=users,dc=boomi-base22,dc=com
+objectclass: top
+objectclass: person
+objectclass: posixAccount
+userPassword: toBeChanged
+cn: Jorge Armando
+sn: Panes Fernandez
+uid: jorge.panes
+uidNumber: 0
+gidNumber: 0
+homeDirectory:
+
+==> users.ldif <==
+dn: ou=users,dc=boomi-base22,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: users

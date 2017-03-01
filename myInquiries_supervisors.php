@@ -58,14 +58,23 @@
 	<script>
 		$(document).ready(function() {
 			var table = null;
-			function getThreads() {
+			function getThreads(own) {
 				if(table != null)
 					table.destroy();
+				var invisibles = [0, 6];
+				var columnReferences = {"attachmentsClip": 1, "actions": 5};
+				if(!own){
+					invisibles.push(1);
+					for(var reference in columnReferences) {
+						columnReferences[reference]--;
+					}
+				}
 				table = $('#example').DataTable( {
 					"ajax": {
-			        	url: "proxy.php?service=getThreads",
-			      		dataSrc: function (json) { return json; }
+			        	url: "proxy.php?service=getThreads&own=" + own,
+			      		dataSrc: function (json) { console.log(json); return json; }
 					},
+					"order": [[ 3, "desc" ]],
 					"columns": [
 			            { data: "id" },
 			            { data: "ownerUid", "defaultContent": "" },
@@ -74,35 +83,34 @@
 			            { data: "status" },
 			            { data: "priority" },
 			            { data: "hasAttachments" },
-			            { data: null, render: function (data, type, full, meta) {return '<button type="button" id="'+ full.id+'" class="btn btn-primary glyphicon glyphicon-ok"></button>'; }}
+			            { data: null, render: function (data, type, full, meta) {return ''; }}
 			        ],
 			        "columnDefs": [{
-		                "targets": [0, 6],
+		                "targets": invisibles,
 		                "visible": false
 		            }],
 					"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-						if ( (Math.floor(aData['seen']/4))%2 == 0 )
+						if ( (Math.floor(aData['seen']))%2 == 0 )
 							$('td', nRow).css( 'font-weight', 'bold');
 
-						if ( aData['hasAttachments'] == 1 && $('td:eq(1)', nRow).find('span').length == 0) 
-							$('td:eq(1)', nRow).html( $('td:eq(1)', nRow).html() + '  <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>');
+						if ( aData['hasAttachments'] == 1 && $('td:eq('+columnReferences['attachmentsClip']+')', nRow).find('span').length == 0) 
+							$('td:eq('+columnReferences['attachmentsClip']+')', nRow).html( $('td:eq('+columnReferences['attachmentsClip']+')', nRow).html() + '  <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>');
 
 						if ( aData['status'] == 'Open' || aData['status'] == 'Reopened' )
-								$('td:eq(5)', nRow).html( '<center><button type="button" id="action'+ aData['id'] +'" class="btn btn-default">Mark In Progress</button></center>' );
-							
+								$('td:eq('+columnReferences['actions']+')', nRow).html( '<center><button type="button" id="action'+ aData['id'] +'" class="btn btn-default">Mark In Progress</button></center>' );
 						if ( aData['status'] == 'In Progress' )
-								$('td:eq(5)', nRow).html( '<center><button type="button" id="action'+ aData['id'] +'" class="btn btn-default">Mark Resolved</button></center>' );
+								$('td:eq('+columnReferences['actions']+')', nRow).html( '<center><button type="button" id="action'+ aData['id'] +'" class="btn btn-default">Mark Resolved</button></center>' );
 				    }
 			    } );		
 			}
 			$('#checkbox').change(function () {
 			    if ($(this).is(":checked")) {
 					$('#displaying').text('Displaying only items assiged to you.');
-					getThreads();
+					getThreads(true);
 			    }
 		        else {
 					$('#displaying').text('Displaying all unassigned items.');
-					getThreads();
+					getThreads(false);
 		        }
 			});
 			$('#checkbox').click();

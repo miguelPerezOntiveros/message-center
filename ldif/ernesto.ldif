@@ -1,0 +1,11 @@
+dn: uid=ernesto.rivera,ou=users,dc=boomi-base22,dc=com
+objectclass: top
+objectclass: person
+objectclass: posixAccount
+userPassword: toBeChanged
+cn: Ernesto Jesus
+sn: Rivera Lara
+uid: ernesto.rivera
+uidNumber: 0
+gidNumber: 0
+homeDirectory:

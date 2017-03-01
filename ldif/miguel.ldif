@@ -1,0 +1,11 @@
+dn: uid=jose.perez,ou=users,dc=boomi-base22,dc=com
+objectclass: top
+objectclass: person
+objectclass: posixAccount
+userPassword: toBeChanged
+cn: Jose Miguel
+sn: Perez Ontiveros
+uid: jose.perez
+uidNumber: 0
+gidNumber: 0
+homeDirectory:
