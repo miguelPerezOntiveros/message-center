@@ -339,18 +339,19 @@
 
 		$('#newMessageForm').on('submit', function(e){
 			e.preventDefault();
-			/*
+			
 			var data = {};
 			data.threadId = <?php echo $_GET['id']; ?>;
 			data.message = $('#InquiryBody').val();
-			data.attachment = $('#InquiryFile').val();
+			data.attachment = $('#InquiryFile')[0].files[0];
 
 			$.post( "proxy.php?service=postMessage", JSON.stringify(data), function(data) {
 				modalAndReload(data);
 				$('#InquiryBody').val('');
 				$('#InquiryFile').val('');
 			});
-			*/
+			
+			/*
 			var formData = new FormData($('#newMessageForm')[0]);
 			formData.append('file', $('#InquiryFile')[0].files[0]);
 			formData.append('threadId', <?php echo "'".$_GET['id']."'"; ?>);
@@ -367,6 +368,7 @@
 				contentType: false,
     			processData: false
 			});
+			*/
 		});
 	</script>
 </body>

@@ -14,6 +14,16 @@
 
 	$base_url = "http://boomi-base22.com:9090/ws/rest/messages-center/";
 	switch($_GET['service']){
+		
+		case 'postFile': 
+			$url = $base_url.'file';
+			curl_setopt($ch, CURLOPT_POST, 1);
+
+			$body = @file_get_contents('php://input');
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $body);  
+			
+		break;
+		
 		case 'getThreads': 
 			$url = $base_url.'thread?own='.$_GET['own'];
 			error_log($url);
@@ -26,7 +36,7 @@
 		case 'postMessage': 
 			$url = $base_url.'message';
 			
-			$body = json_decode(@file_get_contents('php://input'), title);
+			$body = json_decode(@file_get_contents('php://input'));
 			//$body['author-id'] = $_SESSION['dn'];
 			//$body = json_encode($body);
 		

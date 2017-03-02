@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <title></title>
+</head>
+<body>
+
+  <input type="file" id="file" name=""><br>
+  <button id="button">POST!</button>
+  <button id="clear" onclick="$('#res').html('')">CLEAR</button>
+  <div id='res'></div>
+  <script type="text/javascript">
+    document.getElementById('button').addEventListener('click', function() {
+      var reader = new FileReader();
+      reader.readAsDataURL(document.getElementById('file').files[0]);
+      reader.onload = function () {
+        var data = {};
+        var base64 = reader.result;
+        data.attachment = base64.substring(base64.indexOf(',')+1);
+        console.log(data.attachment);
+
+        $.post( "http://192.168.0.106/proxy.php?service=postFile", JSON.stringify(data), function(response) {
+          $('#res').append(response);
+        }); 
+      };
+      reader.onerror = function (error) {
+        console.log('Error: ', error);
+      };   
+    });
+
+    function getBase64(file) {
+     
+    }
+  </script>
+</body>
+</html>
+
