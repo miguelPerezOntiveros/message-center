@@ -20,7 +20,7 @@
         data.attachment = base64.substring(base64.indexOf(',')+1);
         console.log(data.attachment);
 
-        $.post( "http://192.168.0.106/proxy.php?service=postFile", JSON.stringify(data), function(response) {
+        $.post( "proxy.php?service=postFile", JSON.stringify(data), function(response) {
           $('#res').append(response);
         }); 
       };

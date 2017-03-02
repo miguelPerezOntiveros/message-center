@@ -350,7 +350,9 @@
 		    	reader.readAsDataURL(document.getElementById('InquiryFile').files[0]);
 		    	reader.onload = function () {
         			var base64 = reader.result;
-		    		data.attachment = base64.substring(base64.indexOf(',')+1);
+		    		data.attachment = {};
+		    		data.attachment.file = base64.substring(base64.indexOf(',')+1);
+		    		data.attachment.name = document.getElementById('InquiryFile').files[0].name;
 
 		    		console.log(data);
 					$.post( "proxy.php?service=postMessage", JSON.stringify(data), function(data) {
