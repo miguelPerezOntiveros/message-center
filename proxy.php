@@ -36,13 +36,13 @@
 		break;
 		case 'postMessage': 
 			$url = $base_url.'message';
+			curl_setopt($ch, CURLOPT_POST, 1);
 			
-			$body = json_decode(@file_get_contents('php://input'));
+			$body = @file_get_contents('php://input');
+			//json_decode( )
 			//$body['author-id'] = $_SESSION['dn'];
 			//$body = json_encode($body);
-		
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $body);                                                                    
-			curl_setopt($ch, CURLOPT_POST, 1);
 		break;
 	};
 
