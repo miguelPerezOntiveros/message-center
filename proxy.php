@@ -20,13 +20,14 @@
 			curl_setopt($ch, CURLOPT_POST, 1);
 
 			$body = @file_get_contents('php://input');
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $body);  
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
 			
 		break;
 		
 		case 'getThreads': 
-			$url = $base_url.'thread?own='.$_GET['own'];
-			error_log($url);
+			$url = $base_url.'thread?'.$_SERVER['QUERY_STRING'];
+			error_log('qs is> '.$_SERVER['QUERY_STRING']);
+			error_log('ur lis >'.$url);
 			error_log($_SESSION['type']);
 			error_log(urlencode($_SESSION['dn']));
 		break;
@@ -40,12 +41,7 @@
 			//$body['author-id'] = $_SESSION['dn'];
 			//$body = json_encode($body);
 		
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $body);                                                                  
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
-				    'Content-Type: application/json',                                                                                
-				    'Content-Length: '.strlen($body)
-			    )                                                                       
-			);  
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $body);                                                                    
 			curl_setopt($ch, CURLOPT_POST, 1);
 		break;
 	};
