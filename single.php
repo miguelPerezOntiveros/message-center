@@ -14,26 +14,26 @@
 		<div id ="body">
 			<div class="container">
 				<div class="row">
-					<div class="col-lg-12 bs-callout-left">
+					<div class="col-md-12 bs-callout-left">
 						<h2>Message Center</h2>
 					</div>
 					<br><br><br>
-					<div class="col-lg-2 newInquiry">
+					<div class="col-md-2 newInquiry">
 						<a href="myInquiries.php"><button style="width: 100%;" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;Return</button></a>
 					</div>
-					<div class="col-lg-2 newInquiry">
+					<div class="col-md-2 newInquiry">
 						<a id="chooseOwner" onclick='$("#ownerModal").modal("show");' class="hidden"><button style="width: 100%;" type="button" class="btn btn-primary">Change Owner</button></a>
 					</div>
-					<div class="col-lg-2 newInquiry">
+					<div class="col-md-2 newInquiry">
 						<a id="chooseDelegate" onclick='$("#delegateModal").modal("show");' class="hidden"><button style="width: 100%;" type="button" class="btn btn-primary">Change Delegate</button></a>
 					</div>
-					<div class="col-lg-2 newInquiry">
+					<div class="col-md-2 newInquiry">
 						<a id="choosePriority" onclick='$("#priorityModal").modal("show");' class="hidden"><button style="width: 100%;" type="button" class="btn btn-primary">Change Priority</button></a>
 					</div>
-					<div class="col-lg-2 newInquiry">
+					<div class="col-md-2 newInquiry">
 						<a id="chooseStatus" onclick='$("#statusModal").modal("show");' class="hidden"><button style="width: 100%;" type="button" class="btn btn-primary">Change Status</button></a>
 					</div>
-					<div class="col-lg-2 newInquiry" align="right">
+					<div class="col-md-2 newInquiry" align="right">
 						<a id="assignToMe" class="hidden"><button style="width: 100%;" type="button" class="btn btn-primary">Assign to me</button></a>
 					</div>
 				</div>
@@ -145,14 +145,14 @@
 				</div>
 
 				<div class="row">
-					<div class="col-lg-12" style='border-left-width: 5px; padding-left: 20px;'>
+					<div class="col-md-12" style='border-left-width: 5px; padding-left: 20px;'>
 						<div>
 							<span id='csr'></span><br>
 							<span id='delegate'></span><br><br>
 						</div>
 						<div id="messages" style='border: 1px solid #DDD; background-color: #f8f8f8; padding: 1em;'></div>
 					</div>
-					<div class="col-lg-12 bs-callout">
+					<div class="col-md-12 bs-callout">
 						<form id="newMessageForm">
 							<div class="form-group">
 								<label for="InquiryBody">New message</label>
@@ -339,25 +339,39 @@
 
 		$('#newMessageForm').on('submit', function(e){
 			e.preventDefault();
-						
-	 		var reader = new FileReader();
-	    	reader.readAsDataURL(document.getElementById('file').files[0]);
-	    	reader.onload = function () {
-	    		var data = {};
-				data.threadId = <?php echo $_GET['id']; ?>;
-				data.message = $('#InquiryBody').val();
-				data.attachment = base64.substring(base64.indexOf(',')+1);
+				
+			var data = {};
+			data.threadId = <?php echo $_GET['id']; ?>;
+			data.message = $('#InquiryBody').val();
+			
+			if(document.getElementById('InquiryFile').files[0] != undefined)
+			{
+		 		var reader = new FileReader();
+		    	reader.readAsDataURL(document.getElementById('InquiryFile').files[0]);
+		    	reader.onload = function () {
+        			var base64 = reader.result;
+		    		data.attachment = base64.substring(base64.indexOf(',')+1);
 
+		    		console.log(data);
+					$.post( "proxy.php?service=postMessage", JSON.stringify(data), function(data) {
+						modalAndReload(data);
+						$('#InquiryBody').val('');
+						$('#InquiryFile').val('');
+					});
+				};
+				reader.onerror = function (error) {
+			        console.log('Error: ', error);
+				};
+			}
+			else{
+	    		console.log(data);
 				$.post( "proxy.php?service=postMessage", JSON.stringify(data), function(data) {
 					modalAndReload(data);
 					$('#InquiryBody').val('');
 					$('#InquiryFile').val('');
 				});
-			};
-			reader.onerror = function (error) {
-		        console.log('Error: ', error);
-			};   
-
+			}
+	
 			/*
 			var formData = new FormData($('#newMessageForm')[0]);
 			formData.append('file', $('#InquiryFile')[0].files[0]);
