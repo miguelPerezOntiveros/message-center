@@ -339,18 +339,25 @@
 
 		$('#newMessageForm').on('submit', function(e){
 			e.preventDefault();
-			
-			var data = {};
-			data.threadId = <?php echo $_GET['id']; ?>;
-			data.message = $('#InquiryBody').val();
-			data.attachment = $('#InquiryFile')[0].files[0];
+						
+	 		var reader = new FileReader();
+	    	reader.readAsDataURL(document.getElementById('file').files[0]);
+	    	reader.onload = function () {
+	    		var data = {};
+				data.threadId = <?php echo $_GET['id']; ?>;
+				data.message = $('#InquiryBody').val();
+				data.attachment = base64.substring(base64.indexOf(',')+1);
 
-			$.post( "proxy.php?service=postMessage", JSON.stringify(data), function(data) {
-				modalAndReload(data);
-				$('#InquiryBody').val('');
-				$('#InquiryFile').val('');
-			});
-			
+				$.post( "proxy.php?service=postMessage", JSON.stringify(data), function(data) {
+					modalAndReload(data);
+					$('#InquiryBody').val('');
+					$('#InquiryFile').val('');
+				});
+			};
+			reader.onerror = function (error) {
+		        console.log('Error: ', error);
+			};   
+
 			/*
 			var formData = new FormData($('#newMessageForm')[0]);
 			formData.append('file', $('#InquiryFile')[0].files[0]);
