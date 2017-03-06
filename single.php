@@ -15,7 +15,7 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-md-12 bs-callout-left">
-						<h2>Message Center</h2>
+						<h2 id="h2AtTop">Message Center</h2>
 					</div>
 					<br><br><br>
 					<div class="col-md-2 newInquiry">
@@ -183,7 +183,14 @@
 	});
 
 		<?php 
-			if($_SESSION['type'] == 'Employees'){
+			if($_SESSION['type'] == 'csrs'){
+				echo "
+						$('#chooseDelegate').removeClass('hidden');
+						$('#chooseStatus').removeClass('hidden');
+						$('#choosePriority').removeClass('hidden');
+					";
+			}
+			if($_SESSION['type'] == 'supervisors'){
 				echo "
 						$('#chooseOwner').removeClass('hidden');
 						$('#chooseDelegate').removeClass('hidden');
@@ -198,13 +205,16 @@
 			$.get(<?php echo '"proxy.php?service=getMessages&threadId='.$_GET['id'].'"'; ?>, function( data ) {
 				message = $.parseJSON(data);
 
-				console.log('%o',message);
+				console.log('got Messages: %o',message);
+				$('#h2AtTop').text(message[0].subject);
 
 				if(!message[0] || !message[0].csr)
 					$('#assignToMe').removeClass('hidden');
 				else
 					$('#csr').html('CSR working on this thread: <b>'+message[0].csr+'</b>.');
-				if(message[0] && message[0].delegate)
+				if(!message[0] || !message[0].delegate)
+					$('#delegate').html('');
+				else
 					$('#delegate').html('This thread is currently being delegated to: <b>'+message[0].delegate+'</b>.');
 				
 				$('#messages').html('');
@@ -217,10 +227,10 @@
 					target: '#messages',
 					customHandler: function(data) {
 				        var defaultMessages = [
-				        						'default message for delegate change',
-										        'default message for owner change', 
-										        'default message for priority change', 
-										        'default message for status change'
+				        						'delegate',
+										        'owner', 
+										        'priority', 
+										        'status'
 										      ];
 
 						$.each(data, function(i, entry) { // this $.each is not included inside the $.mWidget implementation, if needed, it can be added like shown here. We know it will not allways be necessary.
@@ -228,7 +238,7 @@
 						        entry.class = 'systemMessage';
 						        entry.align = 'center';
 					        	if(!entry.message)
-					        		entry.message = defaultMessages[entry.isSystemMessage-1];
+					        		entry.message = 'A new '+defaultMessages[entry.isSystemMessage-1]+' has been assigned.';
 					        } else if( entry.author == <?php echo "'".$_SESSION['userName'].' '.$_SESSION['sn']."'"; ?> ) {
 							    entry.class = 'myMessage';
 					        	entry.align = 'right';
@@ -271,7 +281,7 @@
 			}, 2500);
 			getMessages();
 		}
-
+		$('#delegateModal').keypress(function(event) { if (event.keyCode == 13 || event.which == 13) { $('#changeDelegateSubmit').click(); }});
 		$('#changeDelegateSubmit').click(function() {
 			$('#delegateModal').modal('hide');
 
@@ -285,6 +295,7 @@
 				modalAndReload(data);
 			});
 		});
+		$('#ownerModal').keypress(function(event) { if (event.keyCode == 13 || event.which == 13) { $('#changeOwnerSubmit').click(); }});
 		$('#changeOwnerSubmit').click(function() {
 			$('#ownerModal').modal('hide');
 
@@ -298,6 +309,7 @@
 				modalAndReload(data);
 			});
 		});
+		$('#priorityModal').keypress(function(event) { if (event.keyCode == 13 || event.which == 13) { $('#changePrioritySubmit').click(); }});
 		$('#changePrioritySubmit').click(function() {
 			$('#priorityModal').modal('hide');
 
@@ -311,6 +323,7 @@
 				modalAndReload(data);
 			});
 		});
+		$('#statusModal').keypress(function(event) { if (event.keyCode == 13 || event.which == 13) { $('#changeStatusSubmit').click(); }});
 		$('#changeStatusSubmit').click(function() {
 			$('#statusModal').modal('hide');
 
@@ -350,9 +363,10 @@
 		    	reader.readAsDataURL(document.getElementById('InquiryFile').files[0]);
 		    	reader.onload = function () {
         			var base64 = reader.result;
-		    		data.attachment = {};
-		    		data.attachment.file = base64.substring(base64.indexOf(',')+1);
-		    		data.attachment.name = document.getElementById('InquiryFile').files[0].name;
+		    		data.attachment = [{
+			    		file : base64.substring(base64.indexOf(',')+1),
+			    		name : document.getElementById('InquiryFile').files[0].name
+		    		}];
 
 		    		console.log(data);
 					$.post( "proxy.php?service=postMessage", JSON.stringify(data), function(data) {

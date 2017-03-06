@@ -1,0 +1,5 @@
+dn: cn=test_memberof_grp,ou=users,dc=boomi-base22,dc=com
+objectclass: groupofnames
+objectclass: top
+cn: test_memberof_grp
+member: uid=test_member_uid,ou=users,dc=boomi-base22,dc=com
