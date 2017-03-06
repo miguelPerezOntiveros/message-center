@@ -4,10 +4,10 @@ objectclass: top
 cn: customers
 member:
 
-dn: cn=employees,ou=users,dc=boomi-base22,dc=com
+dn: cn=csrs,ou=users,dc=boomi-base22,dc=com
 objectclass: groupofnames
 objectclass: top
-cn: employees
+cn: csrs
 member:
 
 dn: cn=supervisors,ou=users,dc=boomi-base22,dc=com

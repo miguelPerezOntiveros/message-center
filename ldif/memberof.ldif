@@ -15,3 +15,6 @@ olcMemberOfRefInt: TRUE
 olcMemberOfGroupOC: groupOfNames
 olcMemberOfMemberAD: member
 olcMemberOfMemberOfAD: memberOf
+
+
+ldappasswd -h 127.0.0.1 -x -D "cn=root,dc=boomi-base22,dc=com" -w Bas3two2 -S "uid=ken.rokicki,ou=users,dc=boomi-base22,dc=com"
