@@ -1,4 +1,0 @@
-dn: cn=csrs,ou=Users,dc=boomi-base22,dc=com
-cn: csrs
-objectClass: groupOfNames
-member: 

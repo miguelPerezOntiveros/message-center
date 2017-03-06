@@ -1,0 +1,59 @@
+dn: uid=luis.lozano,ou=users,dc=boomi-base22,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalperson
+objectclass: inetorgperson
+userPassword: toBeChanged
+cn: Luis Fernando
+sn: Lozano Belaunzaran
+uid: luis.lozano
+
+dn: uid=ernesto.rivera,ou=users,dc=boomi-base22,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalperson
+objectclass: inetorgperson
+userPassword: toBeChanged
+cn: Ernesto Jesus
+sn: Rivera Lara
+uid: ernesto.rivera
+
+dn: uid=jose.perez,ou=users,dc=boomi-base22,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalperson
+objectclass: inetorgperson
+userPassword: toBeChanged
+cn: Jose Miguel
+sn: Perez Ontiveros
+uid: jose.perez
+
+dn: uid=jorge.panes,ou=users,dc=boomi-base22,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalperson
+objectclass: inetorgperson
+userPassword: toBeChanged
+cn: Jorge Armando
+sn: Panes Fernandez
+uid: jorge.panes
+
+dn: uid=ken.rokicki,ou=users,dc=boomi-base22,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalperson
+objectclass: inetorgperson
+userPassword: toBeChanged
+cn: Ken Rokicki
+sn: Rokicki
+uid: ken.rokicki
+
+dn: uid=jorge.barquin,ou=users,dc=boomi-base22,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalperson
+objectclass: inetorgperson
+userPassword: toBeChanged
+cn: Jorge Aurelio
+sn: Barquin Bravo
+uid: jorge.barquin

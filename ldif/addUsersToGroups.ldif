@@ -1,0 +1,29 @@
+dn: cn=employees,ou=users,dc=boomi-base22,dc=com
+changetype: modify
+add: member
+member: uid=jorge.barquin,ou=users,dc=boomi-base22,dc=com
+
+dn: cn=csrs,ou=users,dc=boomi-base22,dc=com
+changetype: modify
+add: member
+member: uid=ernesto.rivera,ou=users,dc=boomi-base22,dc=com
+
+dn: cn=csrs,ou=users,dc=boomi-base22,dc=com
+changetype: modify
+add: member
+member: uid=ken.rokicki,ou=users,dc=boomi-base22,dc=com
+
+dn: cn=supervisors,ou=users,dc=boomi-base22,dc=com
+changetype: modify
+add: member
+member: uid=luis.lozano,ou=users,dc=boomi-base22,dc=com
+
+dn: cn=hius,ou=users,dc=boomi-base22,dc=com
+changetype: modify
+add: member
+member: uid=jose.perez,ou=users,dc=boomi-base22,dc=com
+
+dn: cn=csrs,ou=users,dc=boomi-base22,dc=com
+changetype: modify
+add: member
+member: uid=jorge.panes,ou=users,dc=boomi-base22,dc=com
