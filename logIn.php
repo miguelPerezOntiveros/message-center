@@ -16,9 +16,8 @@
 			$groupData = ldap_get_entries($ldapconn, $result);
 			$type = $groupData[0]['cn'][0];
 			
-			strtok($data[0]["dn"], '=');
 			if($ohash == $nhash)
-				return array($type, strtok(','), $data[0]["sn"][0]);
+				return array($type, $data[0]["uid"][0], $data[0]["sn"][0]);
 		}
 		return array();
 	}

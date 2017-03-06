@@ -7,10 +7,10 @@
 
 <body>
 	<?php 
-		if($_SESSION['type'] == 'csrs')
-			include 'myInquiries_csrs.php';
-		else if($_SESSION['type'] == 'hius')
-			include 'myInquiries_hius.php';
+		if($_SESSION['type'] == 'employees')
+			include 'myInquiries_employees.php';
+		else if($_SESSION['type'] == 'customers')
+			include 'myInquiries_customers.php';
 		else if($_SESSION['type'] == 'supervisors')
 			include 'myInquiries_supervisors.php';
 	?>
