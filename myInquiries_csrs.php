@@ -19,6 +19,12 @@
 						</span>
 					</div>
 				</div>
+
+				<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+					<div class="modal-dialog"  id='humanModalMessage' role="document">
+					</div>
+				</div>
+
 				<br>
 				<div class="row">
 					<div class="col-lg-12">
@@ -69,40 +75,45 @@
 						columnReferences[reference]--;
 					}
 				}
-				table = $('#example').DataTable( {
-					"ajax": {
-			        	url: "proxy.php?service=getThreads&own=" + own,
-			      		dataSrc: function (json) { console.log(json); return json; }
-					},
-					"order": [[ 3, "desc" ]],
-					"columns": [
-			            { data: "id" },
-			            { data: "ownerUid", "defaultContent": "" },
-			            { data: "subject", render: function (data, type, full, meta) {return "<a href='single.php?id="+full.id+"'>"+data+"</a>"; } },
-			            { data: "lastUpdated" },
-			            { data: "status" },
-			            { data: "priority" },
-			            { data: "hasAttachments" },
-			            { data: null, render: function (data, type, full, meta) {return ''; }}
-			        ],
-			        "columnDefs": [{
-		                "targets": invisibles,
-		                "visible": false
-		            }],
-					"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-						if ( (Math.floor(aData['seen']))%2 == 0 )
-							$('td', nRow).css( 'font-weight', 'bold');
+				$.get("proxy.php?service=getThreads&own=" + own, function(ajaxResponse){
+					console.log(ajaxResponse);
+					ajaxResponse = JSON.parse(ajaxResponse);
+					if(ajaxResponse[0].error)
+						modalAndReload(JSON.stringify(ajaxResponse[0]), true);
+					else
+						table = $('#example').DataTable( {
+					        "data": ajaxResponse,
+							"order": [[ 3, "desc" ]],
+							"columns": [
+					            { data: "id" },
+					            { data: "ownerUid", "defaultContent": "" },
+					            { data: "subject", render: function (data, type, full, meta) {return "<a href='single.php?id="+full.id+"'>"+data+"</a>"; } },
+					            { data: "lastUpdated" },
+					            { data: "status" },
+					            { data: "priority" },
+					            { data: "hasAttachments" },
+					            { data: null, render: function (data, type, full, meta) {return ''; }}
+					        ],
+					        "columnDefs": [{
+				                "targets": invisibles,
+				                "visible": false
+				            }],
+							"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+								if ( (Math.floor(aData['seen']))%2 == 0 )
+									$('td', nRow).css( 'font-weight', 'bold');
 
-						if ( aData['hasAttachments'] == 1 && $('td:eq('+columnReferences['attachmentsClip']+')', nRow).find('span').length == 0) 
-							$('td:eq('+columnReferences['attachmentsClip']+')', nRow).html( $('td:eq('+columnReferences['attachmentsClip']+')', nRow).html() + '  <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>');
+								if ( aData['hasAttachments'] == 1 && $('td:eq('+columnReferences['attachmentsClip']+')', nRow).find('span').length == 0) 
+									$('td:eq('+columnReferences['attachmentsClip']+')', nRow).html( $('td:eq('+columnReferences['attachmentsClip']+')', nRow).html() + '  <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>');
 
-						if ( aData['status'] == 'Open' || aData['status'] == 'Reopened' )
-								$('td:eq('+columnReferences['actions']+')', nRow).html( '<center><button type="button" id="action'+ aData['id'] +'" class="btn btn-default">Mark In Progress</button></center>' );
-						if ( aData['status'] == 'In Progress' )
-								$('td:eq('+columnReferences['actions']+')', nRow).html( '<center><button type="button" id="action'+ aData['id'] +'" class="btn btn-default">Mark Resolved</button></center>' );
-				    }
-			    } );		
-			}
+								if ( aData['status'] == 'Open' || aData['status'] == 'Reopened' )
+										$('td:eq('+columnReferences['actions']+')', nRow).html( '<center><button type="button" id="action'+ aData['id'] +'" class="btn btn-default">Mark In Progress</button></center>' );
+								if ( aData['status'] == 'In Progress' )
+										$('td:eq('+columnReferences['actions']+')', nRow).html( '<center><button type="button" id="action'+ aData['id'] +'" class="btn btn-default">Mark Resolved</button></center>' );
+					    }
+				    });	
+				});
+			}	
+		
 			$('#checkbox').change(function () {
 			    if ($(this).is(":checked")) {
 					$('#displaying').text('Displaying only items assiged to you.');
@@ -115,5 +126,21 @@
 			});
 			$('#checkbox').click();
 
+			function modalAndReload(msg, stay) {
+				msg = JSON.parse(msg);
+				if(msg.error){
+					$('#humanModalMessage').html('<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><span class="sr-only"></span>&nbsp;Error: '+msg.error+'</div>');
+				}
+				else{
+					$('#humanModalMessage').html('<div class="alert alert-success" role="alert"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span><span class="sr-only"></span>&nbsp;'+msg.success+'</div>');			
+				}
+
+				$("#myModal").modal("show");
+				setTimeout(function(){
+					$("#myModal").modal("hide");
+				}, 2500);
+				if(!stay)
+					getThreads();
+			}
 		} );
 	</script>

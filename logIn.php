@@ -4,7 +4,7 @@
 			ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
 	  		$ldapbind = ldap_bind($ldapconn, 'cn=root,dc=boomi-base22,dc=com', 'Bas3two2') or die ("Error trying to bind: ".ldap_error($ldapconn));
 			
-			$result = ldap_search($ldapconn, "ou=users,DC=boomi-base22,DC=com", "(cn=".$_POST['userName'].")") or die ("Error in search query: ".ldap_error($ldapconn));
+			$result = ldap_search($ldapconn, "ou=users,DC=boomi-base22,DC=com", "(uid=".$_POST['userName'].")") or die ("Error in search query: ".ldap_error($ldapconn));
 			$data = ldap_get_entries($ldapconn, $result);
 
 			$ohash = base64_decode(substr($data[0]["userpassword"][0], 6));

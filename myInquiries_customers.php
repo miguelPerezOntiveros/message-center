@@ -90,42 +90,47 @@
 				if(table != null)
 					table.destroy();
 
-				table = $('#example').DataTable( {
-			        "ajax": {
-			        	url: "proxy.php?service=getThreads",
-			      		dataSrc: function (json) { console.log(json); return json; }
-					},
-					"order": [[ 3, "desc" ]],
-			        "columns": [
-			            { data: "id" },
-			            { data: "ownerUid", "defaultContent": "" },
-			            { data: "subject", render: function (data, type, full, meta) {return "<a href='single.php?id="+full.id+"'>"+data+"</a>"; } },
-			            { data: "lastUpdated" },
-			            { data: "status" },
-			            { data: "hasAttachments" },
-			            { data: null }
-			        ],
-			        "columnDefs": [{
-		                "targets": [0, 5],
-		                "visible": false
-		            }],
-					"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-						if ( (Math.floor(aData['seen']/4))%2 == 0 )
-							$('td', nRow).css( 'font-weight', 'bold');
+				$.get("proxy.php?service=getThreads", function(ajaxResponse){
+					console.log(ajaxResponse);
+					ajaxResponse = JSON.parse(ajaxResponse);
+					if(ajaxResponse[0].error)
+						modalAndReload(JSON.stringify(ajaxResponse[0]), true);
+					else
+						table = $('#example').DataTable( {
+					        "data": ajaxResponse,
+							"order": [[ 3, "desc" ]],
+					        "columns": [
+					            { data: "id" },
+					            { data: "ownerUid", "defaultContent": "" },
+					            { data: "subject", render: function (data, type, full, meta) {return "<a href='single.php?id="+full.id+"'>"+data+"</a>"; } },
+					            { data: "lastUpdated" },
+					            { data: "status" },
+					            { data: "hasAttachments" },
+					            { data: null }
+					        ],
+					        "columnDefs": [{
+				                "targets": [0, 5],
+				                "visible": false
+				            }],
+							"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+								if ( (Math.floor(aData['seen']/4))%2 == 0 )
+									$('td', nRow).css( 'font-weight', 'bold');
 
-						if ( aData['hasAttachments'] == 1 && $('td:eq(1)', nRow).find('span').length == 0) 
-								$('td:eq(1)', nRow).html( $('td:eq(1)', nRow).html() + '  <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>');
+								if ( aData['hasAttachments'] == 1 && $('td:eq(1)', nRow).find('span').length == 0) 
+										$('td:eq(1)', nRow).html( $('td:eq(1)', nRow).html() + '  <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>');
 
-						if ( aData['status'] != 'Closed' )
-								$('td:eq(4)', nRow).html(  '<center><button type="button" id="action'+ aData['id'] +'" class="btn btn-default" title="Close"><span class="glyphicon glyphicon-folder-close"></span></button></center>' );
-						else
-								$('td:eq(4)', nRow).html(  '<center><button type="button" id="action'+ aData['id'] +'" class="btn btn-default" title="Open"><span class="glyphicon glyphicon-folder-open"></span></button></center>' );
-				    }
-			    } );		
+								if ( aData['status'] != 'Closed' )
+										$('td:eq(4)', nRow).html(  '<center><button type="button" id="action'+ aData['id'] +'" class="btn btn-default" title="Close"><span class="glyphicon glyphicon-folder-close"></span></button></center>' );
+								else
+										$('td:eq(4)', nRow).html(  '<center><button type="button" id="action'+ aData['id'] +'" class="btn btn-default" title="Open"><span class="glyphicon glyphicon-folder-open"></span></button></center>' );
+						    }
+					    });	
+				});
 			}
+	
 			getThreads();
 
-			function modalAndReload(msg) {
+			function modalAndReload(msg, stay) {
 				msg = JSON.parse(msg);
 				if(msg.error){
 					$('#humanModalMessage').html('<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><span class="sr-only"></span>&nbsp;Error: '+msg.error+'</div>');
@@ -138,7 +143,8 @@
 				setTimeout(function(){
 					$("#myModal").modal("hide");
 				}, 2500);
-				getThreads();
+				if(!stay)
+					getThreads();
 			}
 
 			$('#newMessageForm').on('submit', function(e){
