@@ -21,6 +21,9 @@
 					<div class="col-md-2 newInquiry">
 						<a href="myInquiries.php"><button style="width: 100%;" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;Return</button></a>
 					</div>
+					<div class="col-md-2 newInquiry" align="right">
+						<a id="assignToMe" class="hidden"><button style="width: 100%;" type="button" class="btn btn-primary">Assign to me</button></a>
+					</div>
 					<div class="col-md-2 newInquiry">
 						<a id="chooseOwner" onclick='$("#ownerModal").modal("show");' class="hidden"><button style="width: 100%;" type="button" class="btn btn-primary">Change Owner</button></a>
 					</div>
@@ -31,10 +34,7 @@
 						<a id="choosePriority" onclick='$("#priorityModal").modal("show");' class="hidden"><button style="width: 100%;" type="button" class="btn btn-primary">Change Priority</button></a>
 					</div>
 					<div class="col-md-2 newInquiry">
-						<a id="chooseStatus" onclick='$("#statusModal").modal("show");' class="hidden"><button style="width: 100%;" type="button" class="btn btn-primary">Change Status</button></a>
-					</div>
-					<div class="col-md-2 newInquiry" align="right">
-						<a id="assignToMe" class="hidden"><button style="width: 100%;" type="button" class="btn btn-primary">Assign to me</button></a>
+						<a id="chooseStatus" onclick='$("#statusModal").modal("show");'><button style="width: 100%;" type="button" class="btn btn-primary">Change Status</button></a>
 					</div>
 				</div>
 
@@ -148,7 +148,9 @@
 					<div class="col-md-12" style='border-left-width: 5px; padding-left: 20px;'>
 						<div>
 							<span id='csr'></span><br>
-							<span id='delegate'></span><br><br>
+							<span id='delegate'></span><br>
+							<span id='status'></span><br>
+							<span id='priority'></span><br><br>
 						</div>
 						<div id="messages" style='border: 1px solid #DDD; background-color: #f8f8f8; padding: 1em;'></div>
 					</div>
@@ -217,6 +219,10 @@
 				else
 					$('#delegate').html('This thread is currently being delegated to: <b>'+message[0].delegate+'</b>.');
 				
+				$('#status').html('Status: <b>' + message[0].status + '</b>.');
+				if(message[0].priority)
+					$('#priority').html('Priority: <b>' + message[0].priority + '</b>.');
+
 				$('#messages').html('');
 				if(message[0])
 				$.mWidget({
