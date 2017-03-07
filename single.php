@@ -238,7 +238,9 @@
 						        entry.class = 'systemMessage';
 						        entry.align = 'center';
 					        	if(!entry.message)
-					        		entry.message = 'A new '+defaultMessages[entry.isSystemMessage-1]+' has been assigned.';
+					        		entry.message = '<b>'+entry.message.substring(0, entry.message.indexOf('|')) + '</b> has been assigned as ' + defaultMessages[entry.isSystemMessage-1];
+					        	else
+					        		entry.message = '<b>'+entry.message.substring(0, entry.message.indexOf('|')) + '</b> has been assigned as ' + defaultMessages[entry.isSystemMessage-1] + '.<br> Message: ' + entry.message.substring(entry.message.indexOf('|')+1);
 					        } else if( entry.author == <?php echo "'".$_SESSION['userName'].' '.$_SESSION['sn']."'"; ?> ) {
 							    entry.class = 'myMessage';
 					        	entry.align = 'right';
