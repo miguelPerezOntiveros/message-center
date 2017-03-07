@@ -14,7 +14,6 @@
 
 	$base_url = "http://boomi-base22.com:9090/ws/rest/messages-center/";
 	switch($_GET['service']){
-		
 		case 'postFile': 
 			$url = $base_url.'file';
 			curl_setopt($ch, CURLOPT_POST, 1);
@@ -43,6 +42,12 @@
 			//$body['author-id'] = $_SESSION['dn'];
 			//$body = json_encode($body);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $body);                                                                    
+		break;
+		case 'getCsrs':
+			$url = $base_url.'csr';
+		break;
+		case 'getCustomers':
+			$url = $base_url.'customer';
 		break;
 	};
 

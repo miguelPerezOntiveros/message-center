@@ -185,3 +185,15 @@ input:checked + .slider:before {
     cursor: inherit;
     display: block;
 }
+
+/*automcomplete*/
+  .autoCompleteOption{
+    background-color: #bdd2ff;
+    border: 1px solid #2e6da4;
+    border-radius: 10px;
+    padding: 3px 15px;
+    color: black;
+  }
+  .autoCompleteOption:hover {
+    background-color: #7292ff;
+  }

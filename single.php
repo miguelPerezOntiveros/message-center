@@ -53,7 +53,9 @@
 							<div class="modal-body">
 								<div class="form-group">
 									<label for="changeOwner">Owner</label>
-		    						<input type='text' class="form-control" id="changeOwner"></textarea>
+		    						<input type='text' onKeyUp="completeCsr('csrs', '#changeOwner', '#ownerOptions')" class="form-control" id="changeOwner"></textarea>
+		    						<br>
+		    						<div id='ownerOptions'></div>
 		    					</div>
 								<div class="form-group">
 									<label for="changeOwnerMessage">Message</label>
@@ -79,7 +81,9 @@
 							<div class="modal-body">
 								<div class="form-group">
 									<label for="changeDelegate">Delegate</label>
-		    						<input type='text' class="form-control" id="changeDelegate"></textarea>
+		    						<input type='text' onKeyUp="completeCsr('csrs', '#changeDelegate', '#delegateOptions')" class="form-control" id="changeDelegate">
+		    						<br>
+		    						<div id="delegateOptions"></div>
 		    					</div>
 								<div class="form-group">
 									<label for="changeDelegateMessage">Message</label>
@@ -104,7 +108,7 @@
 							<div class="modal-body">
 								<div class="form-group">
 									<label for="changePriority">Priority</label>
-		    						<input type='text' class="form-control" id="changePriority"></textarea>
+		    						<input type='text' class="form-control" id="changePriority">
 		    					</div>
 								<div class="form-group">
 									<label for="changePriorityMessage">Message</label>
@@ -243,10 +247,6 @@
 					        if(entry.isSystemMessage != 0){
 						        entry.class = 'systemMessage';
 						        entry.align = 'center';
-					        	if(!entry.message)
-					        		entry.message = '<b>'+entry.message.substring(0, entry.message.indexOf('|')) + '</b> has been assigned as ' + defaultMessages[entry.isSystemMessage-1];
-					        	else
-					        		entry.message = '<b>'+entry.message.substring(0, entry.message.indexOf('|')) + '</b> has been assigned as ' + defaultMessages[entry.isSystemMessage-1] + '.<br> Message: ' + entry.message.substring(entry.message.indexOf('|')+1);
 					        } else if( entry.author == <?php echo "'".$_SESSION['userName'].' '.$_SESSION['sn']."'"; ?> ) {
 							    entry.class = 'myMessage';
 					        	entry.align = 'right';
@@ -415,6 +415,27 @@
 			});
 			*/
 		});
+		var options = [];
+		$.get('proxy.php?service=getCsrs', function( data ) {
+			console.log('getCsrs:');
+			options['csrs'] = JSON.parse(data);
+			console.log(options['csrs']);
+		});
+		$.get('proxy.php?service=getCustomers', function( data ) {
+			console.log('getCustomers:');
+			options['customers'] = JSON.parse(data);
+			console.log(options['customers']);
+		});
+		function completeCsr(type, inputObj, optionsObj){
+			if($(inputObj).val().length > 3) {
+				$(optionsObj).html('');
+				$.each(options[type], function(i, e){
+					if(e.uid.includes($(inputObj).val()) || e.name.includes($(inputObj).val())){
+						$(optionsObj).append('<span class="autoCompleteOption" onclick="$(\''+inputObj+'\').val(\''+e.uid+'\')">'+e.name+'</span>&nbsp;');
+					}
+				});				
+			}
+		}
 	</script>
 </body>
 </html>

@@ -28,21 +28,17 @@
 
 						<br><br>
 
-						<div class="col-lg-12">
+						<div class="col-lg-12" height="50px">
 							<div id="hiuSelectorDiv" class='hidden'>
 								<label>HIU:</label>
-								<select id="hiuSelector">
-									<option value="jose.perez">jose.perez</option>
-									<option value="ernesto.rivera">ernesto.rivera</option>
-								</select>
+								<input type="text" onKeyUp="completeCsr('customers', '#hiuSelector', '#hiuOptions')"  id="hiuSelector">
+								<div id='hiuOptions' style="padding-top: 5px;"></div>
 							</div>
 
 							<div id="csrSelectorDiv" class='hidden'>
 								<label>CSR:</label>
-								<select id="csrSelector">
-									<option value="jose.perez">jose.perez</option>
-									<option value="ernesto.rivera">ernesto.rivera</option>
-								</select>
+								<input type="text" onKeyUp="completeCsr('csrs', '#csrSelector', '#csrOptions')"  id="csrSelector">
+								<div id='csrOptions' style="padding-top: 5px;"></div>
 							</div>
 
 							<div id="dateSelectorDiv" class='hidden'>
@@ -116,114 +112,136 @@
 		$('#startDate').val(new Date().toDateInputValue());
 		$('#endDate').val(new Date().toDateInputValue());
 
-		$(document).ready(function() {
-			var table = null;
-			function getThreads(qs) {
-				if(table != null)
-					table.destroy();
-				var invisibles = [0, 6];
-				var columnReferences = {"attachmentsClip": 1, "actions": 5};
-				console.log('qs to be sent is:' + qs);
 
-				$.get("proxy.php?service=getThreads" + qs, function(ajaxResponse){
-					console.log(ajaxResponse);
-					ajaxResponse = JSON.parse(ajaxResponse);
-					if(ajaxResponse[0].error)
-						modalAndReload(JSON.stringify(ajaxResponse[0]), true);
-					else
-						table = $('#example').DataTable( {
-					        "data": ajaxResponse,
-							"order": [[ 3, "desc" ]],
-							"columns": [
-					            { data: "id" },
-					            { data: "ownerUid", "defaultContent": "" },
-					            { data: "subject", render: function (data, type, full, meta) {return "<a href='single.php?id="+full.id+"'>"+ data +"</a>"; } },
-					            { data: "lastUpdated" },
-					            { data: "status" },
-					            { data: "priority" },
-					            { data: "hasAttachments" },
-					            { data: null, render: function (data, type, full, meta) {return ''; }}
-					        ],
-					        "columnDefs": [{
-				                "targets": invisibles,
-				                "visible": false
-				            }],
-							"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-								if ( (Math.floor(aData['seen']))%2 == 0 )
-									$('td', nRow).css( 'font-weight', 'bold');
+		var table = null;
+		function getThreads(qs) {
+			if(table != null)
+				table.destroy();
+			var invisibles = [0, 6];
+			var columnReferences = {"attachmentsClip": 1, "actions": 5};
+			console.log('qs to be sent is:' + qs);
 
-								if ( aData['hasAttachments'] == 1 && $('td:eq('+columnReferences['attachmentsClip']+')', nRow).find('span').length == 0) 
-									$('td:eq('+columnReferences['attachmentsClip']+')', nRow).html( $('td:eq('+columnReferences['attachmentsClip']+')', nRow).html() + '  <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>');
+			$.get("proxy.php?service=getThreads" + qs, function(ajaxResponse){
+				console.log(ajaxResponse);
+				ajaxResponse = JSON.parse(ajaxResponse);
+				if(ajaxResponse[0].error)
+					modalAndReload(JSON.stringify(ajaxResponse[0]), true);
+				else
+					table = $('#example').DataTable( {
+				        "data": ajaxResponse,
+						"order": [[ 3, "desc" ]],
+						"columns": [
+				            { data: "id" },
+				            { data: "ownerUid", "defaultContent": "" },
+				            { data: "subject", render: function (data, type, full, meta) {return "<a href='single.php?id="+full.id+"'>"+ data +"</a>"; } },
+				            { data: "lastUpdated" },
+				            { data: "status" },
+				            { data: "priority" },
+				            { data: "hasAttachments" },
+				            { data: null, render: function (data, type, full, meta) {return ''; }}
+				        ],
+				        "columnDefs": [{
+			                "targets": invisibles,
+			                "visible": false
+			            }],
+						"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+							if ( (Math.floor(aData['seen']))%2 == 0 )
+								$('td', nRow).css( 'font-weight', 'bold');
 
-								if ( aData['status'] == 'Open' || aData['status'] == 'Reopened' )
-										$('td:eq('+columnReferences['actions']+')', nRow).html( '<center><button type="button" id="action'+ aData['id'] +'" class="btn btn-default">Mark In Progress</button></center>' );
-								if ( aData['status'] == 'In Progress' )
-										$('td:eq('+columnReferences['actions']+')', nRow).html( '<center><button type="button" id="action'+ aData['id'] +'" class="btn btn-default">Mark Resolved</button></center>' );
-					    }
-				    });		
-				});
-			}
-		
-			$('#goFilter').click(function () {
-				var qs = '';
-				switch($('input[name=group1]:checked').val()){
-					case 'hiu':
-						qs = '&hiu=' + $('#hiuSelector').val();
-					break;
-					case 'csr':
-						qs = '&csr=' + $('#csrSelector').val();
-					break;
-					case 'date':
-						qs = '&start-date='+ $('#startDate').val() + '&end-date=' + $('#endDate').val();
-					break;
-					case 'none':
+							if ( aData['hasAttachments'] == 1 && $('td:eq('+columnReferences['attachmentsClip']+')', nRow).find('span').length == 0) 
+								$('td:eq('+columnReferences['attachmentsClip']+')', nRow).html( $('td:eq('+columnReferences['attachmentsClip']+')', nRow).html() + '  <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>');
 
-					break;
-				}
-				getThreads(qs);
+							if ( aData['status'] == 'Open' || aData['status'] == 'Reopened' )
+									$('td:eq('+columnReferences['actions']+')', nRow).html( '<center><button type="button" id="action'+ aData['id'] +'" class="btn btn-default">Mark In Progress</button></center>' );
+							if ( aData['status'] == 'In Progress' )
+									$('td:eq('+columnReferences['actions']+')', nRow).html( '<center><button type="button" id="action'+ aData['id'] +'" class="btn btn-default">Mark Resolved</button></center>' );
+				    }
+			    });		
 			});
-			$('#goFilter').trigger('click');
+		}
+	
+		$('#goFilter').click(function () {
+			var qs = '';
+			switch($('input[name=group1]:checked').val()){
+				case 'hiu':
+					qs = '&hiu=' + $('#hiuSelector').val();
+				break;
+				case 'csr':
+					qs = '&csr=' + $('#csrSelector').val();
+				break;
+				case 'date':
+					qs = '&start-date='+ $('#startDate').val() + '&end-date=' + $('#endDate').val();
+				break;
+				case 'none':
 
-			$('input[type=radio][name=group1]').change(function() {
-				switch(this.value){
-					case 'hiu':
-						$('#hiuSelectorDiv').removeClass('hidden');
-						$('#csrSelectorDiv').addClass('hidden');
-						$('#dateSelectorDiv').addClass('hidden');
-					break;
-					case 'csr':
-						$('#hiuSelectorDiv').addClass('hidden');
-						$('#csrSelectorDiv').removeClass('hidden');
-						$('#dateSelectorDiv').addClass('hidden');
-					break;
-					case 'date':
-						$('#hiuSelectorDiv').addClass('hidden');
-						$('#csrSelectorDiv').addClass('hidden');
-						$('#dateSelectorDiv').removeClass('hidden');
-					break;
-					case 'none':
-						$('#hiuSelectorDiv').addClass('hidden');
-						$('#csrSelectorDiv').addClass('hidden');
-						$('#dateSelectorDiv').addClass('hidden');
-					break;
-				}
-		    });
-
-		    function modalAndReload(msg, stay) {
-				msg = JSON.parse(msg);
-				if(msg.error){
-					$('#humanModalMessage').html('<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><span class="sr-only"></span>&nbsp;Error: '+msg.error+'</div>');
-				}
-				else{
-					$('#humanModalMessage').html('<div class="alert alert-success" role="alert"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span><span class="sr-only"></span>&nbsp;'+msg.success+'</div>');			
-				}
-
-				$("#myModal").modal("show");
-				setTimeout(function(){
-					$("#myModal").modal("hide");
-				}, 2500);
-				if(!stay)
-					getThreads();
+				break;
 			}
-		} );
+			getThreads(qs);
+		});
+		$('#goFilter').trigger('click');
+
+		$('input[type=radio][name=group1]').change(function() {
+			switch(this.value){
+				case 'hiu':
+					$('#hiuSelectorDiv').removeClass('hidden');
+					$('#csrSelectorDiv').addClass('hidden');
+					$('#dateSelectorDiv').addClass('hidden');
+				break;
+				case 'csr':
+					$('#hiuSelectorDiv').addClass('hidden');
+					$('#csrSelectorDiv').removeClass('hidden');
+					$('#dateSelectorDiv').addClass('hidden');
+				break;
+				case 'date':
+					$('#hiuSelectorDiv').addClass('hidden');
+					$('#csrSelectorDiv').addClass('hidden');
+					$('#dateSelectorDiv').removeClass('hidden');
+				break;
+				case 'none':
+					$('#hiuSelectorDiv').addClass('hidden');
+					$('#csrSelectorDiv').addClass('hidden');
+					$('#dateSelectorDiv').addClass('hidden');
+				break;
+			}
+	    });
+
+	    function modalAndReload(msg, stay) {
+			msg = JSON.parse(msg);
+			if(msg.error){
+				$('#humanModalMessage').html('<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><span class="sr-only"></span>&nbsp;Error: '+msg.error+'</div>');
+			}
+			else{
+				$('#humanModalMessage').html('<div class="alert alert-success" role="alert"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span><span class="sr-only"></span>&nbsp;'+msg.success+'</div>');			
+			}
+
+			$("#myModal").modal("show");
+			setTimeout(function(){
+				$("#myModal").modal("hide");
+			}, 2500);
+			if(!stay)
+				getThreads();
+		}
+
+		var options = [];
+		$.get('proxy.php?service=getCsrs', function( data ) {
+			console.log('getCsrs:');
+			options['csrs'] = JSON.parse(data);
+			console.log(options['csrs']);
+		});
+		$.get('proxy.php?service=getCustomers', function( data ) {
+			console.log('getCustomers:');
+			options['customers'] = JSON.parse(data);
+			console.log(options['customers']);
+		});
+		function completeCsr(type, inputObj, optionsObj){
+			if($(inputObj).val().length > 3) {
+				$(optionsObj).html('');
+				$.each(options[type], function(i, e){
+					if(e.uid.includes($(inputObj).val()) || e.name.includes($(inputObj).val())){
+						$(optionsObj).append('<span class="autoCompleteOption" onclick="$(\''+inputObj+'\').val(\''+e.uid+'\')">'+e.name+'</span>&nbsp;');
+					}
+				});				
+			}
+		}
+
 	</script>
