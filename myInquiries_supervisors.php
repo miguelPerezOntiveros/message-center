@@ -30,15 +30,23 @@
 
 						<div class="col-lg-12" height="50px">
 							<div id="hiuSelectorDiv" class='hidden'>
-								<label>HIU:</label>
-								<input type="text" onKeyUp="completeCsr('customers', '#hiuSelector', '#hiuOptions')"  id="hiuSelector">
-								<div id='hiuOptions' style="padding-top: 5px;"></div>
+								<span style='display: inline-block; vertical-align: top;'>
+									<label>HIU:</label>
+								</span>
+								<span style='display: inline-block;'>
+									<input type="text" onKeyUp="completeCsr('customers', '#hiuSelector', '#hiuOptions')"  id="hiuSelector">
+									<div id='hiuOptions' class="options"></div>
+								</span>
 							</div>
 
 							<div id="csrSelectorDiv" class='hidden'>
-								<label>CSR:</label>
-								<input type="text" onKeyUp="completeCsr('csrs', '#csrSelector', '#csrOptions')"  id="csrSelector">
-								<div id='csrOptions' style="padding-top: 5px;"></div>
+								<span style='display: inline-block; vertical-align: top;'>
+									<label>CSR:</label>
+								</span>
+								<span style='display: inline-block;'>
+									<input type="text" onKeyUp="completeCsr('csrs', '#csrSelector', '#csrOptions')"  id="csrSelector">
+									<div id='csrOptions' class="options"></div>
+								</span>
 							</div>
 
 							<div id="dateSelectorDiv" class='hidden'>
@@ -124,7 +132,7 @@
 			$.get("proxy.php?service=getThreads" + qs, function(ajaxResponse){
 				console.log(ajaxResponse);
 				ajaxResponse = JSON.parse(ajaxResponse);
-				if(ajaxResponse[0].error)
+				if(ajaxResponse.length > 0 && ajaxResponse[0].error)
 					modalAndReload(JSON.stringify(ajaxResponse[0]), true);
 				else
 					table = $('#example').DataTable( {
@@ -164,7 +172,7 @@
 			var qs = '';
 			switch($('input[name=group1]:checked').val()){
 				case 'hiu':
-					qs = '&hiu=' + $('#hiuSelector').val();
+					qs = '&customer=' + $('#hiuSelector').val();
 				break;
 				case 'csr':
 					qs = '&csr=' + $('#csrSelector').val();
@@ -234,8 +242,9 @@
 			console.log(options['customers']);
 		});
 		function completeCsr(type, inputObj, optionsObj){
+			$(optionsObj).html('');
+
 			if($(inputObj).val().length > 3) {
-				$(optionsObj).html('');
 				$.each(options[type], function(i, e){
 					if(e.uid.includes($(inputObj).val()) || e.name.includes($(inputObj).val())){
 						$(optionsObj).append('<span class="autoCompleteOption" onclick="$(\''+inputObj+'\').val(\''+e.uid+'\')">'+e.name+'</span>&nbsp;');
@@ -243,5 +252,4 @@
 				});				
 			}
 		}
-
 	</script>

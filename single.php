@@ -54,8 +54,7 @@
 								<div class="form-group">
 									<label for="changeOwner">Owner</label>
 		    						<input type='text' onKeyUp="completeCsr('csrs', '#changeOwner', '#ownerOptions')" class="form-control" id="changeOwner"></textarea>
-		    						<br>
-		    						<div id='ownerOptions'></div>
+		    						<div class='options' id='ownerOptions'></div>
 		    					</div>
 								<div class="form-group">
 									<label for="changeOwnerMessage">Message</label>
@@ -82,8 +81,7 @@
 								<div class="form-group">
 									<label for="changeDelegate">Delegate</label>
 		    						<input type='text' onKeyUp="completeCsr('csrs', '#changeDelegate', '#delegateOptions')" class="form-control" id="changeDelegate">
-		    						<br>
-		    						<div id="delegateOptions"></div>
+		    						<div class='options' id="delegateOptions"></div>
 		    					</div>
 								<div class="form-group">
 									<label for="changeDelegateMessage">Message</label>
@@ -206,6 +204,13 @@
 			}
 		?>
 
+		var defaultMessages = [
+			'delegate',
+			'owner', 
+			'priority', 
+			'status'
+		];
+
 		var message = null;
 		function getMessages(){
 			$.get(<?php echo '"proxy.php?service=getMessages&threadId='.$_GET['id'].'"'; ?>, function( data ) {
@@ -227,7 +232,6 @@
 				if(message[0].priority)
 					$('#priority').html('Priority: <b>' + message[0].priority + '</b>.');
 
-				$('#messages').html('');
 				if(message[0])
 				$.mWidget({
 					data: message[0].messages,
@@ -236,12 +240,9 @@
 					},
 					target: '#messages',
 					customHandler: function(data) {
-				        var defaultMessages = [
-				        						'delegate',
-										        'owner', 
-										        'priority', 
-										        'status'
-										      ];
+						var currentMessages = $('#messages').find('.message').length;
+						console.log('current messages: ' + currentMessages);
+						data = data.slice(currentMessages);
 
 						$.each(data, function(i, entry) { // this $.each is not included inside the $.mWidget implementation, if needed, it can be added like shown here. We know it will not allways be necessary.
 					        if(entry.isSystemMessage != 0){
@@ -427,8 +428,9 @@
 			console.log(options['customers']);
 		});
 		function completeCsr(type, inputObj, optionsObj){
+			$(optionsObj).html('');
+
 			if($(inputObj).val().length > 3) {
-				$(optionsObj).html('');
 				$.each(options[type], function(i, e){
 					if(e.uid.includes($(inputObj).val()) || e.name.includes($(inputObj).val())){
 						$(optionsObj).append('<span class="autoCompleteOption" onclick="$(\''+inputObj+'\').val(\''+e.uid+'\')">'+e.name+'</span>&nbsp;');

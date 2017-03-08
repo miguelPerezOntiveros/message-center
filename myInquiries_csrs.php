@@ -78,7 +78,7 @@
 				$.get("proxy.php?service=getThreads&own=" + own, function(ajaxResponse){
 					console.log(ajaxResponse);
 					ajaxResponse = JSON.parse(ajaxResponse);
-					if(ajaxResponse[0].error)
+					if(ajaxResponse.length > 0 && ajaxResponse[0].error)
 						modalAndReload(JSON.stringify(ajaxResponse[0]), true);
 					else
 						table = $('#example').DataTable( {
@@ -86,7 +86,7 @@
 							"order": [[ 3, "desc" ]],
 							"columns": [
 					            { data: "id" },
-					            { data: "ownerUid", "defaultContent": "" },
+					            { data: "customer", "defaultContent": "" },
 					            { data: "subject", render: function (data, type, full, meta) {return "<a href='single.php?id="+full.id+"'>"+data+"</a>"; } },
 					            { data: "lastUpdated" },
 					            { data: "status" },

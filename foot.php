@@ -3,8 +3,8 @@
 		<center>
 		<br>
 			<small>
-				Copyright C 2017 Winsconsin Physicians Service Insurance Corporation. All rights reserver. Wisonsin Physicians Service &reg;.<br>
-				Legal Disclaimer | Privacy Policy | EEO/AA employer
+				Copyright &#9400; 2017 Base22 LLC. All rights reserved.<br>
+				Powered by <b>Boomi</b>.
 			</small>
 		</center>
 	</div>

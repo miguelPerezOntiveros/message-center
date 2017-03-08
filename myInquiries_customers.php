@@ -93,7 +93,7 @@
 				$.get("proxy.php?service=getThreads", function(ajaxResponse){
 					console.log(ajaxResponse);
 					ajaxResponse = JSON.parse(ajaxResponse);
-					if(ajaxResponse[0].error)
+					if(ajaxResponse.length > 0 && ajaxResponse[0].error)
 						modalAndReload(JSON.stringify(ajaxResponse[0]), true);
 					else
 						table = $('#example').DataTable( {
