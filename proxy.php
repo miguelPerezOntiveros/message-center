@@ -31,7 +31,7 @@
 			error_log(urlencode($_SESSION['dn']));
 		break;
 		case 'getMessages': 
-			$url = $base_url.'message?threadId='.$_GET['threadId'];
+			$url = $base_url.'thread/'.$_GET['threadId'];
 		break;
 		case 'postMessage': 
 			$url = $base_url.'message';

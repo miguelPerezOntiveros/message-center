@@ -157,7 +157,7 @@
 						<div id="messages" style='border: 1px solid #DDD; background-color: #f8f8f8; padding: 1em;'></div>
 					</div>
 					<div class="col-md-12 bs-callout">
-						<form id="newMessageForm">
+						<form id="newMessageForm" enctype="multipart/form-data">
 							<div class="form-group">
 								<label for="InquiryBody">New message</label>
 	    						<textarea class="form-control" name="message" id="InquiryBody" rows="3" placeholder="Type a message" required=""></textarea>
@@ -361,7 +361,8 @@
 
 		$('#newMessageForm').on('submit', function(e){
 			e.preventDefault();
-				
+			
+			
 			var data = {};
 			data.threadId = <?php echo $_GET['id']; ?>;
 			data.message = $('#InquiryBody').val();
@@ -396,18 +397,29 @@
 					$('#InquiryFile').val('');
 				});
 			}
-	
 			/*
+
+
+			var data = {};
+			data.threadId = <?php echo $_GET['id']; ?>;
+			data.message = $('#InquiryBody').val();
+
+			$.each($('#InquiryFile').files, function(i, e){
+		    	data.attachment = [];
+	    		data.attachment.push({name: e})
+			});
+
 			var formData = new FormData($('#newMessageForm')[0]);
 			formData.append('file', $('#InquiryFile')[0].files[0]);
 			formData.append('threadId', <?php echo "'".$_GET['id']."'"; ?>);
-			
-			$.ajax({
+
+	    	$.ajax({
 				type: "POST",
 				url: "proxy.php?service=postMessage",
+				//contentType: "multipart/mixed; boundary=frontier",
 				data: formData,
-				success: function(response) {
-					modalAndReload(response);
+				success: function(data) {
+					modalAndReload(data);
 					$('#InquiryBody').val('');
 					$('#InquiryFile').val('');
 				},
@@ -415,6 +427,7 @@
     			processData: false
 			});
 			*/
+		
 		});
 		var options = [];
 		$.get('proxy.php?service=getCsrs', function( data ) {
