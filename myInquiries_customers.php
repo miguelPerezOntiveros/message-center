@@ -23,7 +23,7 @@
 	    					<div class="form-group">
 								<label for="InquiryFile">Attachment</label><br>
 								<label class="btn btn-default btn-file">
-								    Browse <input type="file" name="attachment" id="InquiryFile" style="display: none;">
+								    Browse <input type="file" name="attachments" id="InquiryFile" style="display: none;">
 								</label>
 	    					</div>
 	    					<button style='float:right;' type="submit" class="btn btn-primary">Submit</button>
