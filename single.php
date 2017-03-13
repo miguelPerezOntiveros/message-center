@@ -242,7 +242,7 @@
 				console.log('got Messages: %o',message);
 				$('#h2AtTop').text(message[0].subject);
 
-				if(!message[0] || !message[0].csr)
+				if(!message[0] || !message[0].csr && <?php echo ($_SESSION['type'] == 'csrs' || $_SESSION['type'] == 'supervisros' ? 'true' : 'false'); ?>)
 					$('#assignToMe').removeClass('hidden');
 				else
 					$('#csr').html('CSR working on this thread: <b>'+message[0].csr+'</b>.');
