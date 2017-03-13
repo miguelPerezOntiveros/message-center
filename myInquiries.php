@@ -6,6 +6,8 @@
 <?php include 'head.php';?>
 
 <body>
+	<?php include 'menu.php';?>
+
 	<?php 
 		if($_SESSION['type'] == 'csrs')
 			include 'myInquiries_csrs.php';

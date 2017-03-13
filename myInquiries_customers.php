@@ -1,5 +1,4 @@
 	<div id = "container">
-		<?php include 'menu.php';?>
 		<div id ="body">
 			<div class="container">
 				<div class="row">
@@ -10,20 +9,21 @@
 					<div class="col-lg-12 newInquiry" id='callout'>
 						<button type="button" onclick="myToggle();" class="btn btn-primary">Create New Inquiry</button>
 						<form class="formToToggle" id="newMessageForm">
+							<input type="hidden" name="threadId" value=0>
 							<br>
 							<div class="form-group">
 								<label for="InquirySubject">Subject</label>
-								<input type="text" class="form-control" id="InquirySubject" placeholder="Enter subject" requred>
+								<input type="text" name="subject" class="form-control" id="InquirySubject" placeholder="Enter subject" requred>
 								<small class="form-text text-muted">Cannot be changed once submitted.</small>
 							</div>
 							<div class="form-group">
 								<label for="InquiryBody">Body</label>
-	    						<textarea class="form-control" id="InquiryBody" rows="3" placeholder="Enter body" required></textarea>
+	    						<textarea class="form-control" name="message" id="InquiryBody" rows="3" placeholder="Enter body" required></textarea>
 	    					</div>
 	    					<div class="form-group">
 								<label for="InquiryFile">Attachment</label><br>
 								<label class="btn btn-default btn-file">
-								    Browse <input type="file" id="InquiryFile" style="display: none;">
+								    Browse <input type="file" name="attachment" id="InquiryFile" style="display: none;">
 								</label>
 	    					</div>
 	    					<button style='float:right;' type="submit" class="btn btn-primary">Submit</button>
@@ -150,16 +150,22 @@
 			$('#newMessageForm').on('submit', function(e){
 				e.preventDefault();
 				myToggle();
-				
-				var data = {};
-				data.threadId = 0;
-				data.subject = $('#InquirySubject').val();
-				data.message = $('#InquiryBody').val();
-				data.attachment = $('#InquiryFile').val();
-
-				$.post( "proxy.php?service=postMessage", JSON.stringify(data), function(data) {
-					modalAndReload(data);
-				});
+				postMessageAjax(new FormData($('#newMessageForm')[0]));
 			});
+			function postMessageAjax(formData){
+				$.ajax({
+					type: "POST",
+					url: "proxy.php?service=postMessage",
+					data: formData,
+					success: function(data) {
+						modalAndReload(data);
+						$('#InquiryBody').val('');
+						$('#InquiryFile').val('');
+					},
+					contentType: "multipart/mixed; boundary=frontier",
+					//contentType: false,
+	    			processData: false
+				});
+			}
 		} );
 	</script>

@@ -9,8 +9,9 @@
 	<!-- mWidget 0.1 -->
 	<script src = "js/mWidget0.1.js"></script>
 
+	<?php include 'menu.php';?>
+
 	<div id = "container">
-		<?php include 'menu.php';?>
 		<div id ="body">
 			<div class="container">
 				<div class="row">
@@ -22,7 +23,12 @@
 						<a href="myInquiries.php"><button style="width: 100%;" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;Return</button></a>
 					</div>
 					<div class="col-md-2 newInquiry" align="right">
-						<a id="assignToMe" class="hidden"><button style="width: 100%;" type="button" class="btn btn-primary">Assign to me</button></a>
+						<form id="assignToMeForm" enctype="multipart/form-data">
+							<input type="hidden" name="ownerId" value= <?php echo "'".$_SESSION['dn']."'"; ?> >
+							<input type="hidden" name="isSystemMessage" value=2 >
+							<input type="hidden" name="threadId" value=<?php echo "'".$_GET['id']."'"; ?>>
+							<a id="assignToMe" class="hidden"><button style="width: 100%;" type="button" class="btn btn-primary">Assign to me</button></a>
+						</form>
 					</div>
 					<div class="col-md-2 newInquiry">
 						<a id="chooseOwner" onclick='$("#ownerModal").modal("show");' class="hidden"><button style="width: 100%;" type="button" class="btn btn-primary">Change Owner</button></a>
@@ -51,15 +57,19 @@
 	       						<h4 class="modal-title">Change Owner</h4>
 							</div>
 							<div class="modal-body">
-								<div class="form-group">
-									<label for="changeOwner">Owner</label>
-		    						<input type='text' onKeyUp="completeCsr('csrs', '#changeOwner', '#ownerOptions')" class="form-control" id="changeOwner"></textarea>
-		    						<div class='options' id='ownerOptions'></div>
-		    					</div>
-								<div class="form-group">
-									<label for="changeOwnerMessage">Message</label>
-		    						<textarea class="form-control" id="changeOwnerMessage" rows="3" placeholder="Type a message"></textarea>
-		    					</div>
+								<form id="changeOwnerForm" enctype="multipart/form-data">
+									<input type="hidden" name="threadId" value=<?php echo $_GET['id']; ?> >
+									<input type="hidden" name="isSystemMessage" value="1">
+									<div class="form-group">
+										<label for="changeOwner">Owner</label>
+			    						<input type='text' onKeyUp="completeCsr('csrs', '#changeOwner', '#ownerOptions')" class="form-control" name="owner" id="changeOwner"></textarea>
+			    						<div class='options' id='ownerOptions'></div>
+			    					</div>
+									<div class="form-group">
+										<label for="changeOwnerMessage">Message</label>
+			    						<textarea class="form-control" name="message" id="changeOwnerMessage" rows="3" placeholder="Type a message"></textarea>
+			    					</div>
+								</form>
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -78,15 +88,19 @@
 	       						<h4 class="modal-title">Change Delegate</h4>
 							</div>
 							<div class="modal-body">
-								<div class="form-group">
-									<label for="changeDelegate">Delegate</label>
-		    						<input type='text' onKeyUp="completeCsr('csrs', '#changeDelegate', '#delegateOptions')" class="form-control" id="changeDelegate">
-		    						<div class='options' id="delegateOptions"></div>
-		    					</div>
-								<div class="form-group">
-									<label for="changeDelegateMessage">Message</label>
-		    						<textarea class="form-control" id="changeDelegateMessage" rows="3" placeholder="Type a message"></textarea>
-		    					</div>
+								<form id="changeDelegateForm" enctype="multipart/form-data">
+									<input type="hidden" name="threadId" value=<?php echo $_GET['id']; ?> >
+									<input type="hidden" name="isSystemMessage" value="2">
+									<div class="form-group">
+										<label for="changeDelegate">Delegate</label>
+			    						<input type='text' onKeyUp="completeCsr('csrs', '#changeDelegate', '#delegateOptions')" class="form-control" name="delegate" id="changeDelegate">
+			    						<div class='options' id="delegateOptions"></div>
+			    					</div>
+									<div class="form-group">
+										<label for="changeDelegateMessage">Message</label>
+			    						<textarea class="form-control" name="message" id="changeDelegateMessage" rows="3" placeholder="Type a message"></textarea>
+			    					</div>
+								</form>
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -104,14 +118,18 @@
 	       						<h4 class="modal-title">Change Priority</h4>
 							</div>
 							<div class="modal-body">
-								<div class="form-group">
-									<label for="changePriority">Priority</label>
-		    						<input type='text' class="form-control" id="changePriority">
-		    					</div>
-								<div class="form-group">
-									<label for="changePriorityMessage">Message</label>
-		    						<textarea class="form-control" id="changePriorityMessage" rows="3" placeholder="Type a message"></textarea>
-		    					</div>
+								<form id="changePriorityForm" enctype="multipart/form-data">
+									<input type="hidden" name="threadId" value=<?php echo $_GET['id']; ?> >
+									<input type="hidden" name="isSystemMessage" value="3">
+									<div class="form-group">
+										<label for="changePriority">Priority</label>
+			    						<input type='text' class="form-control" name="status" id="changePriority">
+			    					</div>
+									<div class="form-group">
+										<label for="changePriorityMessage">Message</label>
+			    						<textarea class="form-control" name="message" id="changePriorityMessage" rows="3" placeholder="Type a message"></textarea>
+			    					</div>
+								</form>
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -129,14 +147,18 @@
 	       						<h4 class="modal-title">Change Status</h4>
 							</div>
 							<div class="modal-body">
-								<div class="form-group">
-									<label for="changeStatus">Status</label>
-		    						<input type='text' class="form-control" id="changeStatus"></textarea>
-		    					</div>
-								<div class="form-group">
-									<label for="changeStatusMessage">Message</label>
-		    						<textarea class="form-control" id="changeStatusMessage" rows="3" placeholder="Type a message"></textarea>
-		    					</div>
+								<form id="assignToMeForm" enctype="multipart/form-data">
+									<input type="hidden" name="threadId" value=<?php echo $_GET['id']; ?> >
+									<input type="hidden" name="isSystemMessage" value="4">
+									<div class="form-group">
+										<label for="changeStatus">Status</label>
+			    						<input type='text' class="form-control" name="status" id="changeStatus"></textarea>
+			    					</div>
+									<div class="form-group">
+										<label for="changeStatusMessage">Message</label>
+			    						<textarea class="form-control" name="message" id="changeStatusMessage" rows="3" placeholder="Type a message"></textarea>
+			    					</div>
+								</form>
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -158,6 +180,7 @@
 					</div>
 					<div class="col-md-12 bs-callout">
 						<form id="newMessageForm" enctype="multipart/form-data">
+							<input type="hidden" name="threadId" value=<?php echo "'".$_GET['id']."'"; ?>>
 							<div class="form-group">
 								<label for="InquiryBody">New message</label>
 	    						<textarea class="form-control" name="message" id="InquiryBody" rows="3" placeholder="Type a message" required=""></textarea>
@@ -255,16 +278,19 @@
 							        entry.class = 'theirMessage';
 							        entry.align = 'left';
 							}
+							
 							if(entry.attachments){
 								var res = '<hr><b>Attachment(s):&nbsp;</b>';
 								entry.attachments.split(',').forEach(function(e){
-									res += '<a class="attachments">'+e+'</a>, ';									
+									res += '<a href="proxy.php?service=getAttachment&threadId='+message[0].id+'&messageId='+entry.id+'&attachment='+e+'" class="attachments">'+e+'</a>, ';									
 								})
 								res = res.substring(0, res.length-2);
 								entry.attachments = res;
 							}
 							else
 								entry.attachments = '';
+
+							entry.authorFirstName = entry.author.substring(0, entry.author.indexOf(' '));
 						});
 						return data;
 					}
@@ -290,79 +316,39 @@
 			}, 2500);
 			getMessages();
 		}
-		$('#delegateModal').keypress(function(event) { if (event.keyCode == 13 || event.which == 13) { $('#changeDelegateSubmit').click(); }});
-		$('#changeDelegateSubmit').click(function() {
-			$('#delegateModal').modal('hide');
 
-			var data = {};
-			data.threadId = <?php echo $_GET['id']; ?>;
-			data.delegateId = $('#changeDelegate').val();
-			data.message = $('#changeDelegateMessage').val();
-			data.isSystemMessage = 1;
-
-			$.post( "proxy.php?service=postMessage", JSON.stringify(data), function(data) {
-				modalAndReload(data);
-			});
-		});
 		$('#ownerModal').keypress(function(event) { if (event.keyCode == 13 || event.which == 13) { $('#changeOwnerSubmit').click(); }});
 		$('#changeOwnerSubmit').click(function() {
 			$('#ownerModal').modal('hide');
-
-			var data = {};
-			data.threadId = <?php echo $_GET['id']; ?>;
-			data.ownerId = $('#changeOwner').val();
-			data.message = $('#changeOwnerMessage').val();
-			data.isSystemMessage = 2;			
-
-			$.post( "proxy.php?service=postMessage", JSON.stringify(data), function(data) {
-				modalAndReload(data);
-			});
+			postMessageAjax(new FormData($('#changeOwnerForm')[0]));
 		});
+
+		$('#delegateModal').keypress(function(event) { if (event.keyCode == 13 || event.which == 13) { $('#changeDelegateSubmit').click(); }});
+		$('#changeDelegateSubmit').click(function() {
+			$('#delegateModal').modal('hide');
+			postMessageAjax(new FormData($('#changeDelegateForm')[0]));
+		});
+
 		$('#priorityModal').keypress(function(event) { if (event.keyCode == 13 || event.which == 13) { $('#changePrioritySubmit').click(); }});
 		$('#changePrioritySubmit').click(function() {
 			$('#priorityModal').modal('hide');
-
-			var data = {};
-			data.threadId = <?php echo $_GET['id']; ?>;
-			data.priority = $('#changePriority').val();
-			data.message = $('#changePriorityMessage').val();
-			data.isSystemMessage = 3;	
-
-			$.post( "proxy.php?service=postMessage", JSON.stringify(data), function(data) {
-				modalAndReload(data);
-			});
+			postMessageAjax(new FormData($('#changePriorityForm')[0]));
 		});
+		
 		$('#statusModal').keypress(function(event) { if (event.keyCode == 13 || event.which == 13) { $('#changeStatusSubmit').click(); }});
 		$('#changeStatusSubmit').click(function() {
 			$('#statusModal').modal('hide');
-
-			var data = {};
-			data.threadId = <?php echo $_GET['id']; ?>;
-			data.status = $('#changeStatus').val();
-			data.message = $('#changeStatusMessage').val();
-			data.isSystemMessage = 4;
-
-			$.post( "proxy.php?service=postMessage", JSON.stringify(data), function(data) {
-				modalAndReload(data);
-			});
+			postMessageAjax(new FormData($('#changeStatusForm')[0]));
 		});
 
 		$('#assignToMe').click(function() {
-			var data = {};
-			data.threadId = <?php echo $_GET['id']; ?>;
-			data.ownerId = <?php echo "'".$_SESSION['dn']."'"; ?>;
-			data.message = $('#changeOwnerMessage').val();
-			data.isSystemMessage = 2;			
-
-			$.post( "proxy.php?service=postMessage", JSON.stringify(data), function(data) {
-				modalAndReload(data);
-			});
+			postMessageAjax(new FormData($('#assignToMeForm')[0]));
 		});
 
 		$('#newMessageForm').on('submit', function(e){
 			e.preventDefault();
 			
-			
+			/*
 			var data = {};
 			data.threadId = <?php echo $_GET['id']; ?>;
 			data.message = $('#InquiryBody').val();
@@ -397,38 +383,26 @@
 					$('#InquiryFile').val('');
 				});
 			}
-			/*
-
-
-			var data = {};
-			data.threadId = <?php echo $_GET['id']; ?>;
-			data.message = $('#InquiryBody').val();
-
-			$.each($('#InquiryFile').files, function(i, e){
-		    	data.attachment = [];
-	    		data.attachment.push({name: e})
-			});
-
-			var formData = new FormData($('#newMessageForm')[0]);
-			formData.append('file', $('#InquiryFile')[0].files[0]);
-			formData.append('threadId', <?php echo "'".$_GET['id']."'"; ?>);
-
-	    	$.ajax({
+			*/
+			
+			postMessageAjax(new FormData($('#newMessageForm')[0]));
+			//formData.append('file', $('#InquiryFile')[0].files[0]);
+		});
+		function postMessageAjax(formData){
+			$.ajax({
 				type: "POST",
 				url: "proxy.php?service=postMessage",
-				//contentType: "multipart/mixed; boundary=frontier",
 				data: formData,
 				success: function(data) {
 					modalAndReload(data);
 					$('#InquiryBody').val('');
 					$('#InquiryFile').val('');
 				},
-				contentType: false,
+				contentType: "multipart/mixed; boundary=frontier",
+				//contentType: false,
     			processData: false
 			});
-			*/
-		
-		});
+		}
 		var options = [];
 		$.get('proxy.php?service=getCsrs', function( data ) {
 			console.log('getCsrs:');

@@ -24,12 +24,10 @@ body {
 .menu {
   float: right;
   padding: 20px;
-  color: #888;
   text-decoration: none;
   padding-bottom: 10px;
 }
 .menu a {
-    color: #888;
     text-decoration: none;
     padding-bottom: 10px;
     margin-left: 15px; 

@@ -1,5 +1,4 @@
 	<div id = "container">
-		<?php include 'menu.php';?>
 		<div id ="body">
 			<div class="container">
 				<div class="row">

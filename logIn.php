@@ -17,7 +17,7 @@
 			$type = $groupData[0]['cn'][0];
 			
 			if($ohash == $nhash)
-				return array($type, $data[0]["uid"][0], $data[0]["sn"][0]);
+				return array($type, $data[0]["uid"][0], $data[0]["sn"][0], $data[0]["cn"][0]);
 		}
 		return array();
 	}
@@ -35,7 +35,7 @@
 		else //password is correct
 		{
 			session_start();
-			$_SESSION['userName']=$_POST['userName'];		
+			$_SESSION['userName']= $userInfo[3];		
 			$_SESSION['type'] = $userInfo[0];
 			$_SESSION['dn'] = $userInfo[1];
 			$_SESSION['sn'] = $userInfo[2];

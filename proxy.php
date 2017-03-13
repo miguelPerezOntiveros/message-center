@@ -38,9 +38,6 @@
 			curl_setopt($ch, CURLOPT_POST, 1);
 			
 			$body = @file_get_contents('php://input');
-			//json_decode( )
-			//$body['author-id'] = $_SESSION['dn'];
-			//$body = json_encode($body);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $body);                                                                    
 		break;
 		case 'getCsrs':
@@ -48,6 +45,18 @@
 		break;
 		case 'getCustomers':
 			$url = $base_url.'customer';
+		break;
+		case 'getAttachment':
+ 			//curl_setopt($ch, CURLOPT_BINARYTRANSFER, false);
+			$url = $base_url.'thread/'.$_GET['threadId'].'/message/'.$_GET['messageId'].'/attachment/'.$_GET['attachment'];	
+
+			header("Content-Type: image/jpeg");
+			curl_setopt($ch, CURLOPT_HEADER, false);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.1 Safari/537.11');
+
+			error_log('asked for attachment'.$url);
 		break;
 	};
 
