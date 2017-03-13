@@ -59,7 +59,7 @@
 							<div class="modal-body">
 								<form id="changeOwnerForm" enctype="multipart/form-data">
 									<input type="hidden" name="threadId" value=<?php echo $_GET['id']; ?> >
-									<input type="hidden" name="isSystemMessage" value="1">
+									<input type="hidden" name="isSystemMessage" value="2">
 									<div class="form-group">
 										<label for="changeOwner">Owner</label>
 			    						<input type='text' onKeyUp="completeCsr('csrs', '#changeOwner', '#ownerOptions')" class="form-control" name="owner" id="changeOwner"></textarea>
@@ -90,7 +90,7 @@
 							<div class="modal-body">
 								<form id="changeDelegateForm" enctype="multipart/form-data">
 									<input type="hidden" name="threadId" value=<?php echo $_GET['id']; ?> >
-									<input type="hidden" name="isSystemMessage" value="2">
+									<input type="hidden" name="isSystemMessage" value="1">
 									<div class="form-group">
 										<label for="changeDelegate">Delegate</label>
 			    						<input type='text' onKeyUp="completeCsr('csrs', '#changeDelegate', '#delegateOptions')" class="form-control" name="delegate" id="changeDelegate">
@@ -123,7 +123,7 @@
 									<input type="hidden" name="isSystemMessage" value="3">
 									<div class="form-group">
 										<label for="changePriority">Priority</label>
-			    						<input type='text' class="form-control" name="status" id="changePriority">
+			    						<input type='text' class="form-control" name="priority" id="changePriority">
 			    					</div>
 									<div class="form-group">
 										<label for="changePriorityMessage">Message</label>
@@ -147,7 +147,7 @@
 	       						<h4 class="modal-title">Change Status</h4>
 							</div>
 							<div class="modal-body">
-								<form id="assignToMeForm" enctype="multipart/form-data">
+								<form id="changeStatusForm" enctype="multipart/form-data">
 									<input type="hidden" name="threadId" value=<?php echo $_GET['id']; ?> >
 									<input type="hidden" name="isSystemMessage" value="4">
 									<div class="form-group">
