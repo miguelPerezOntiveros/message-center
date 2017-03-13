@@ -62,7 +62,7 @@
 									<input type="hidden" name="isSystemMessage" value="2">
 									<div class="form-group">
 										<label for="changeOwner">Owner</label>
-			    						<input type='text' onKeyUp="completeCsr('csrs', '#changeOwner', '#ownerOptions')" class="form-control" name="owner" id="changeOwner"></textarea>
+			    						<input type='text' onKeyUp="completeCsr('csrs', '#changeOwner', '#ownerOptions')" class="form-control" name="ownerId" id="changeOwner"></textarea>
 			    						<div class='options' id='ownerOptions'></div>
 			    					</div>
 									<div class="form-group">
@@ -93,7 +93,7 @@
 									<input type="hidden" name="isSystemMessage" value="1">
 									<div class="form-group">
 										<label for="changeDelegate">Delegate</label>
-			    						<input type='text' onKeyUp="completeCsr('csrs', '#changeDelegate', '#delegateOptions')" class="form-control" name="delegate" id="changeDelegate">
+			    						<input type='text' onKeyUp="completeCsr('csrs', '#changeDelegate', '#delegateOptions')" class="form-control" name="delegateId" id="changeDelegate">
 			    						<div class='options' id="delegateOptions"></div>
 			    					</div>
 									<div class="form-group">
