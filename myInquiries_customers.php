@@ -160,8 +160,6 @@
 				postMessageAjax(new FormData($('#newMessageForm')[0]));
 			});
 			function postMessageAjax(formData){
-				if(formData.get('attachments').name == '')
-					formData.delete('attachments');
 				$.ajax({
 					type: "POST",
 					url: "proxy.php?service=postMessage",
