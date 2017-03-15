@@ -189,7 +189,7 @@
 								<label for="InquiryFile">Attachment</label><br>
 								<label class="btn btn-default btn-file">
 								    Browse <input type="file" name="attachments" id="InquiryFile" style="display: none;">
-								</label> <span id='label'></span>
+								</label>&nbsp;<span id='fileLabel'></span>
 	    					</div>
 	    					<button style='float:right;' type="submit" class="btn btn-primary">Submit</button>
 						</form>
@@ -201,13 +201,13 @@
 	</div>
 
 	<script>
-	$(document).on('change', ':file', function() {
-	    var input = $(this),
-	        numFiles = input.get(0).files ? input.get(0).files.length : 1,
-	        label = input.val().replace(/\\/g, '/').replace(/.*\//, ''),
-	   	 	log = numFiles > 1 ? numFiles + ' files selected' : label;
-	   	$('#label').text(log);
-	});
+		$(document).on('change', ':file', function() {
+		    var input = $(this),
+		        numFiles = input.get(0).files ? input.get(0).files.length : 1,
+		        label = input.val().replace(/\\/g, '/').replace(/.*\//, ''),
+		   	 	log = numFiles > 1 ? numFiles + ' files selected' : label;
+		   	$('#fileLabel').text(log);
+		});
 
 		<?php 
 			if($_SESSION['type'] == 'csrs'){
@@ -242,6 +242,7 @@
 				console.log('got Messages: %o',message);
 				$('#h2AtTop').text(message[0].subject);
 
+				$('#assignToMe').addClass('hidden');
 				if(!message[0] || !message[0].csr && <?php echo ($_SESSION['type'] == 'csrs' || $_SESSION['type'] == 'supervisros' ? 'true' : 'false'); ?>)
 					$('#assignToMe').removeClass('hidden');
 				else
@@ -289,7 +290,7 @@
 							}
 							else
 								entry.attachments = '';
-
+							
 							entry.authorFirstName = entry.author.substring(0, entry.author.indexOf(' '));
 						});
 						return data;
@@ -389,6 +390,8 @@
 			//formData.append('file', $('#InquiryFile')[0].files[0]);
 		});
 		function postMessageAjax(formData){
+			if(formData.get('attachments').name == '')
+				formData.delete('attachments');
 			$.ajax({
 				type: "POST",
 				url: "proxy.php?service=postMessage",

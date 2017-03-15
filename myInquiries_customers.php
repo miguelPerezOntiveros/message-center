@@ -24,7 +24,7 @@
 								<label for="InquiryFile">Attachment</label><br>
 								<label class="btn btn-default btn-file">
 								    Browse <input type="file" name="attachments" id="InquiryFile" style="display: none;">
-								</label>
+								</label>&nbsp;<span id='fileLabel'></span>
 	    					</div>
 	    					<button style='float:right;' type="submit" class="btn btn-primary">Submit</button>
 							<br>
@@ -74,6 +74,13 @@
 	</div>
 
 	<script>
+		$(document).on('change', ':file', function() {
+		    var input = $(this),
+		        numFiles = input.get(0).files ? input.get(0).files.length : 1,
+		        label = input.val().replace(/\\/g, '/').replace(/.*\//, ''),
+		   	 	log = numFiles > 1 ? numFiles + ' files selected' : label;
+		   	$('#fileLabel').text(log);
+		});
 		$(document).ready(function() {
 
 			myToggle = function (){
@@ -153,6 +160,8 @@
 				postMessageAjax(new FormData($('#newMessageForm')[0]));
 			});
 			function postMessageAjax(formData){
+				if(formData.get('attachments').name == '')
+					formData.delete('attachments');
 				$.ajax({
 					type: "POST",
 					url: "proxy.php?service=postMessage",
