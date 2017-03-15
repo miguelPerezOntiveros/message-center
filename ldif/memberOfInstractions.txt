@@ -1,0 +1,2 @@
+to add the inetorgperson schema: ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif
+to run the ldif that enables the overlay: ldapadd -Q -Y EXTERNAL -H ldapi:/// -f memberof_config.ldif

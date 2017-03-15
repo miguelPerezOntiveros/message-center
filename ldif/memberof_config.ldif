@@ -4,9 +4,6 @@ cn: module
 olcModulePath: /usr/lib64/openldap/
 olcModuleLoad: memberof
 
-
-
------
 dn: olcOverlay=memberof,olcDatabase={2}hdb,cn=config
 objectClass: olcMemberOf
 objectClass: olcOverlayConfig
@@ -17,6 +14,3 @@ olcMemberOfDangling: ignore
 olcMemberOfRefInt: TRUE
 olcMemberOfGroupOC: groupOfNames
 olcMemberOfMemberAD: member
-
-
-http://idmoim.blogspot.mx/2014/05/enabling-memberof-attribute-in-openldap.html
