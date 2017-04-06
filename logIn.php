@@ -89,7 +89,7 @@
 							</div>
 							<br>
 							<p>	
-								<button style="width: 100%" type="button" class="btn btn-success" onclick="$('#loginForm').submit();">Log In</button>
+								<button style="width: 100%" type="button" class="btn btn-success" id='submitBtn' onclick="$('#loginForm').submit();">Log In</button>
 								<br><br>
 								<button style="width: 100%" type="button" class="btn btn-warning">Create Account</button>
 							</p>
@@ -103,6 +103,15 @@
 					        $('#loginForm').submit();
 					    }
 					});
+
+					var conn = new WebSocket('ws://172.16.0.118:8082');
+					conn.onopen = function(e) {
+					    console.log("Connection established!");
+					};
+
+					conn.onmessage = function(e) {
+					    console.log(e.data);
+					};
 				</script>
 			</div>
 		</div> <!--id = "body"-->

@@ -7,7 +7,7 @@
 					</div>
 					<br><br><br>
 					<div class="col-lg-12 newInquiry" id='callout'>
-						<button type="button" onclick="myToggle();" class="btn btn-primary">Create New Inquiry</button>
+						<button type="button" id="createBtn" onclick="myToggle();" class="btn btn-primary">Create New Inquiry</button>
 						<form class="formToToggle" id="newMessageForm">
 							<input type="hidden" name="threadId" value=0>
 							<br>
@@ -26,7 +26,7 @@
 								    Browse <input type="file" name="attachments" id="InquiryFile" style="display: none;">
 								</label>&nbsp;<span id='fileLabel'></span>
 	    					</div>
-	    					<button style='float:right;' type="submit" class="btn btn-primary">Submit</button>
+	    					<button style='float:right;' id="submitNewBtn" type="submit" class="btn btn-primary">Submit</button>
 							<br>
 						</form>
 					</div>
@@ -51,7 +51,7 @@
 					                <th>Updated</th>
 					                <th>Status</th>
 					                <th>attachment</th>
-					                <th>Action</th>
+					                <th>Actions</th>
 					            </tr>
 					        </thead>
 					        <tfoot>
@@ -62,7 +62,7 @@
 					                <th>Updated</th>
 					                <th>Status</th>
 					                <th>attachment</th>
-					                <th>Action</th>
+					                <th>Actions</th>
 					            </tr>
 					        </tfoot>
 					    </table>
@@ -93,7 +93,8 @@
 			$('.formToToggle').toggle();
 
 			var table = null;
-			function getThreads() {				
+			function getThreads() {	
+				$('#example').css('visibility', 'hidden');
 				if(table != null)
 					table.destroy();
 
@@ -124,14 +125,43 @@
 									$('td', nRow).css( 'font-weight', 'bold');
 
 								if ( aData['hasAttachments'] == 1 && $('td:eq(1)', nRow).find('span').length == 0) 
-										$('td:eq(1)', nRow).html( $('td:eq(1)', nRow).html() + '  <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>');
+										$('td:eq(1)', nRow).html( $('td:eq(1)', nRow).html() + '<span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>');
 
-								if ( aData['status'] != 'Closed' )
-										$('td:eq(4)', nRow).html(  '<center><button type="button" id="action'+ aData['id'] +'" class="btn btn-default" title="Close"><span class="glyphicon glyphicon-folder-close"></span></button></center>' );
-								else
-										$('td:eq(4)', nRow).html(  '<center><button type="button" id="action'+ aData['id'] +'" class="btn btn-default" title="Open"><span class="glyphicon glyphicon-folder-open"></span></button></center>' );
+								switch(aData['status']) {
+									case 'Open':
+									case 'Closed': 
+										$('td:eq(4)', nRow).html( '<font color="grey"><small>N/A</small><font color="grey">' );
+									break;
+									case 'Resolved': 
+										$('td:eq(4)', nRow).html('<button class="actionBtn" data-action="4" type="button" id="'+ aData['id'] +'" class="btn btn-default" title="Close">Close</button>' +
+																 '<button class="actionBtn" data-action="2" type="button" id="'+ aData['id'] +'" class="btn btn-default" title="Reopen">Reopen</button>' );
+									break;
+									default:
+										$('td:eq(4)', nRow).html( '<button class="actionBtn" data-action="4" type="button" id="'+ aData['id'] +'" class="btn btn-default" title="Close">Close</button>' );
+									break;
+								}
 						    }
-					    });	
+					    });
+					$('#example').css('visibility', 'visible');
+
+					$('.actionBtn').click(function(e){
+						var formData = new FormData();
+						formData.append('threadId', e.target.id);
+						formData.append('isSystemMessage', 4);
+						formData.append('status', 4); //closed
+						
+						$.ajax({
+							type: "POST",
+							url: "proxy.php?service=postMessage",
+							data: formData,
+							success: function(data) {
+								modalAndReload(data, false);
+							},
+							contentType: "multipart/mixed; boundary=frontier",
+							//contentType: false,
+			    			processData: false
+						});
+					});
 				});
 			}
 	

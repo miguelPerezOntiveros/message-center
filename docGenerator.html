@@ -1,0 +1,93 @@
+
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+
+<label>Paste data object here: </label><br>
+<textarea rows="10" cols="100" id="input"></textarea><br>
+
+Output will be rendered below, paste it into an HTML Macro.<br><br><br>
+<code>
+	<div id="output"></div>
+</code>
+<br><br>
+<script type="text/plain" id="tpl">
+	&lt;div id="res"&gt;&lt;/div&gt;
+
+	&lt;style type="text/css"&gt;
+		.endpoint{border:1px solid #205081;border-radius:12px;margin-bottom:10px}.endpointName{background-color:#205081;border-top-right-radius:10px;border-top-left-radius:10px;padding:3px 20px;color:#fff;font-size:20px;font-weight:300;letter-spacing:.04em;margin:-1px}.method{padding:10px 30px 20px;border-top:1px solid #205081}.response{padding:5px 10px;margin:2px 0 10px;border:1px solid #205081;border-left-width:5px;border-radius:3px;border-left-color:#205081}pre{background-color:#f0f0f0;border-width:0}table{border:1px solid #f0f0f0}td,th{padding:4px 10px 4px 4px}.initiallyHidden{display:none}div.tab{overflow:hidden}div.tab a{float:left;display:block;color:#000;text-align:center;padding:10px 16px;text-decoration:none;font-size:14px;margin-top:1px}div.tab a:hover{background-color:#f0f0f0}.active,div.tab a:focus{background-color:#f0f0f0}.tabcontent{display:none;padding:6px 12px}
+	&lt;/style&gt;
+
+	&lt;script type="text/plain" id="tpl"&gt;
+		&lt;h2&gt;{name}&lt;/h2&gt;
+		{description}&lt;br&gt;&lt;br&gt;
+		&lt;b&gt;IPv4: &lt;/b&gt;{IPv4}&lt;br&gt;
+		&lt;b&gt;Port: &lt;/b&gt;{port}
+		&lt;br&gt;&lt;br&gt;
+		[endpoints
+			&lt;div class="endpoint"&gt;
+				&lt;header class="endpointName"&gt;{name}&lt;/header&gt;
+				&lt;div class="tab toToggle initiallyHidden"&gt;
+				[methods
+					&lt;a href="javascript:void(0)" class="tablinks"&gt;{name}&lt;/a&gt;
+				]
+				&lt;/div&gt;
+				[methods
+					&lt;div class="method initiallyHidden tabcontent {name}"&gt;
+					&lt;h3&gt;{name}&lt;/h3&gt;
+					{description}&lt;br&gt;&lt;br&gt;
+					&lt;label&gt;Parameters:&lt;/label&gt;
+						&lt;table&gt;
+							&lt;tr&gt;
+								&lt;th&gt;Parameter&lt;/th&gt;
+								&lt;th&gt;In&lt;/th&gt;
+								&lt;th&gt;Description&lt;/th&gt;
+								&lt;th&gt;Required&lt;/th&gt;
+								&lt;th&gt;Type&lt;/th&gt;
+								&lt;th&gt;Example&lt;/th&gt;
+							&lt;/tr&gt;
+							[parameters
+							&lt;tr&gt;
+								&lt;td&gt;{name}&lt;/td&gt;
+								&lt;td&gt;{in}&lt;/td&gt;
+								&lt;td&gt;{description}&lt;/td&gt;
+								&lt;td&gt;{required}&lt;/td&gt;
+								&lt;td&gt;{type}&lt;/td&gt;
+								&lt;td&gt;{example}&lt;/td&gt;
+							&lt;/tr&gt;
+							]
+						&lt;/table&gt;&lt;br&gt;
+					&lt;label&gt;Responses:&lt;/label&gt;
+					[responses
+						&lt;div class="response"&gt;
+							&lt;label&gt;{name}&lt;/label&gt;
+							&lt;pre&gt;{response}&lt;/pre&gt;
+							Status Code: &lt;label&gt;{status}&lt;/label&gt;&lt;br&gt;
+							description: {description}
+						&lt;/div&gt;
+					]
+					&lt;/div&gt;		
+				]
+			&lt;/div&gt;
+		]
+	&lt;/script&gt;
+
+	&lt;script type="text/javascript"&gt;
+		!function(t,e,a){t.mWidget=function(e){if(!e.dataAjax&&!e.data||!e.tplAjax&&!e.tpl)throw e;if(e.data){if(e.tpl){for(var a="",n=[{start:0,recursive:!1}],r=0,i=0;i&lt;e.tpl.length;i++)"["!=e.tpl[i]&&i!=e.tpl.length-1||1!=++r||n.push({start:i,recursive:!0}),"]"==e.tpl[i]&&0==--r&&n.push({start:i+1,recursive:!1});return t.each((e.customHandler||function(t){return t})(e.data),function(r,i){var c=e.tpl;t.each(n,function(a,r){a&lt;n.length-1&&(c=c.replace(e.tpl.substring(r.start,n[a+1].start),function(e){return r.recursive?t.mWidget({tpl:e.slice(/\s/gim.exec(e).index,-1),data:i[e.substring(e.indexOf("[")+1,/\s/gim.exec(e).index)]||{}}):e.replace(/{[_a-zA-Z][_a-zA-Z0-9]*}/g,function(t){return function(t){return"object"==typeof t?JSON.stringify(t,null,2):t}(i[t.slice(1,-1)])})}))}),a+=c}),e.target&&t(e.target).append(a),a}e.tplAjax.success=function(a){e.tpl=a,t.mWidget(e)},t.ajax(e.tplAjax)}else e.dataAjax.success=function(a){e.data=a,t.mWidget(e)},t.ajax(e.dataAjax)}}(jQuery,window);
+		$.mWidget({
+			target: '#res',
+			tpl: $('#tpl').html(),
+			data : {{data}}
+		});
+		$(".endpointName").click(function(){$($(this).parent().find(".toToggle")[0]).is(":visible")?($(this).parent().find(".method").hide(),$(".toToggle").hide()):($(".toToggle").hide(),$(this).parent().find(".toToggle").show(),$($(this).parent().find(".tablinks")[0]).click())}),$(".tablinks").click(function(i){$(".tabcontent").css("display","none"),$(".tablinks").removeClass("active"),$(this).parent().parent().find("."+$(this).text()).css("display","block"),$(this).addClass("active")});
+	&lt;/script&gt;
+</script>
+<script type="text/javascript">
+	$('#input').change(function(){
+		try{
+			JSON.parse($('#input').val());
+			$('#output').html($('#tpl').html().replace('{{data}}', $('#input').val()));
+		}
+		catch(e) {
+			$('#output').text('invalid input');
+		}
+	});
+</script>

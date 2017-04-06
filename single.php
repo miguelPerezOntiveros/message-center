@@ -238,15 +238,25 @@
 		function getMessages(){
 			$.get(<?php echo '"proxy.php?service=getMessages&threadId='.$_GET['id'].'"'; ?>, function( data ) {
 				message = $.parseJSON(data);
+				if(message.error){
+					$('#humanModalMessage').html('<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><span class="sr-only"></span>&nbsp;Error: '+message.error+'</div>');
+					console.log(message.error);
+					$("#myModal").modal("show");
+					setTimeout(function(){
+						$("#myModal").modal("hide");
+					}, 2500);
+				}
 
 				console.log('got Messages: %o',message);
 				$('#h2AtTop').text(message[0].subject);
 
 				$('#assignToMe').addClass('hidden');
-				if(!message[0] || !message[0].csr && <?php echo ($_SESSION['type'] == 'csrs' || $_SESSION['type'] == 'supervisros' ? 'true' : 'false'); ?>)
-					$('#assignToMe').removeClass('hidden');
-				else
-					$('#csr').html('CSR working on this thread: <b>'+message[0].csr+'</b>.');
+				$('#csr').html('CSR working on this thread: <b>'+message[0].csr+'</b>.');
+				if(!message[0] || !message[0].csr) {
+					if(<?php echo ($_SESSION['type'] == 'csrs' || $_SESSION['type'] == 'supervisros' ? 'true' : 'false'); ?>)
+						$('#assignToMe').removeClass('hidden');
+					$('#csr').html('');
+				}
 				if(!message[0] || !message[0].delegate)
 					$('#delegate').html('');
 				else
@@ -256,46 +266,80 @@
 				if(message[0].priority)
 					$('#priority').html('Priority: <b>' + message[0].priority + '</b>.');
 
-				if(message[0])
-				$.mWidget({
-					data: message[0].messages,
-					tplAjax: {
-						url: 'messageTpl.html'
-					},
-					target: '#messages',
-					customHandler: function(data) {
-						var currentMessages = $('#messages').find('.message').length;
-						console.log('current messages: ' + currentMessages);
-						data = data.slice(currentMessages);
+				if(message[0]){
+					var ordered = message[0].messages.slice().sort(function(a, b){
+						return(new Date(a['dateCreated']) < new Date(b['dateCreated'])? -1: 1);
+					});
 
-						$.each(data, function(i, entry) { // this $.each is not included inside the $.mWidget implementation, if needed, it can be added like shown here. We know it will not allways be necessary.
-					        if(entry.isSystemMessage != 0){
-						        entry.class = 'systemMessage';
-						        entry.align = 'center';
-					        } else if( entry.author == <?php echo "'".$_SESSION['userName'].' '.$_SESSION['sn']."'"; ?> ) {
-							    entry.class = 'myMessage';
-					        	entry.align = 'right';
-							} else {
-							        entry.class = 'theirMessage';
-							        entry.align = 'left';
-							}
-							
-							if(entry.attachments){
-								var res = '<hr><b>Attachment(s):&nbsp;</b>';
-								entry.attachments.split(',').forEach(function(e){
-									res += '<a href="proxy.php?service=getAttachment&threadId='+message[0].id+'&messageId='+entry.id+'&attachment='+e+'" class="attachments">'+e+'</a>, ';									
-								})
-								res = res.substring(0, res.length-2);
-								entry.attachments = res;
-							}
-							else
-								entry.attachments = '';
-							
-							entry.authorFirstName = entry.author.substring(0, entry.author.indexOf(' '));
-						});
-						return data;
+					Array.prototype.equals = function (array) {
+					    // if the other array is a falsy value, return
+					    if (!array)
+					        return false;
+
+					    // compare lengths - can save a lot of time 
+					    if (this.length != array.length)
+					        return false;
+
+					    for (var i = 0, l=this.length; i < l; i++) {
+					        // Check if we have nested arrays
+					        if (this[i] instanceof Array && array[i] instanceof Array) {
+					            // recurse into the nested arrays
+					            if (!this[i].equals(array[i]))
+					                return false;       
+					        }           
+					        else if (this[i] != array[i]) { 
+					            // Warning - two different object instances will never be equal: {x:20} != {x:20}
+					            return false;   
+					        }           
+					    }       
+					    return true;
 					}
-				});
+					// Hide method from for-in loops
+					Object.defineProperty(Array.prototype, "equals", {enumerable: false});
+
+					if(!message[0].messages.equals(ordered))
+						console.log('I had to reorder the messages, something is probably wrong in the back end. What I got is %o. Sorted: %o.', message[0].messages, ordered);
+
+					$.mWidget({
+						data: ordered,
+						tplAjax: {
+							url: 'messageTpl.html'
+						},
+						target: '#messages',
+						customHandler: function(data) {
+							var currentMessages = $('#messages').find('.message').length;
+							console.log('current messages: ' + currentMessages);
+							data = data.slice(currentMessages);
+
+							$.each(data, function(i, entry) { // this $.each is not included inside the $.mWidget implementation, if needed, it can be added like shown here. We know it will not allways be necessary.
+						        if(entry.isSystemMessage != 0){
+							        entry.class = 'systemMessage';
+							        entry.align = 'center';
+						        } else if( entry.author == <?php echo "'".$_SESSION['userName'].' '.$_SESSION['sn']."'"; ?> ) {
+								    entry.class = 'myMessage';
+						        	entry.align = 'right';
+								} else {
+								        entry.class = 'theirMessage';
+								        entry.align = 'left';
+								}
+								
+								if(entry.attachments){
+									var res = '<hr><b>Attachment(s):&nbsp;</b>';
+									entry.attachments.split(',').forEach(function(e){
+										res += '<a href="proxy.php?service=getAttachment&threadId='+message[0].id+'&messageId='+entry.id+'&attachment='+escape(e)+'" class="attachments">'+e+'</a>, ';									
+									})
+									res = res.substring(0, res.length-2);
+									entry.attachments = res;
+								}
+								else
+									entry.attachments = '';
+								
+								entry.authorFirstName = entry.author.substring(0, entry.author.indexOf(' '));
+							});
+							return data;
+						}
+					});
+				}
 			});			
 		}
 		getMessages();

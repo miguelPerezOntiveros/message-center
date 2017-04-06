@@ -87,7 +87,7 @@
 					                <th>Status</th>
 					                <th>Priority</th>
 					                <th>attachment</th>
-					                <th>Action</th>
+					                <th>Actions</th>
 					            </tr>
 					        </thead>
 					        <tfoot>
@@ -99,7 +99,7 @@
 					                <th>Status</th>
 					                <th>Priority</th>
 					                <th>attachment</th>
-					                <th>Action</th>
+					                <th>Actions</th>
 					            </tr>
 					        </tfoot>
 					    </table>
@@ -122,6 +122,7 @@
 
 		var table = null;
 		function getThreads(qs) {
+			$('#example').css('visibility', 'hidden');
 			if(table != null)
 				table.destroy();
 			var invisibles = [0, 6];
@@ -152,18 +153,39 @@
 			                "visible": false
 			            }],
 						"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-							if ( (Math.floor(aData['seen']))%2 == 0 )
+							if ( (Math.floor(aData['seen']/8))%2 == 0 )
 								$('td', nRow).css( 'font-weight', 'bold');
 
 							if ( aData['hasAttachments'] == 1 && $('td:eq('+columnReferences['attachmentsClip']+')', nRow).find('span').length == 0) 
 								$('td:eq('+columnReferences['attachmentsClip']+')', nRow).html( $('td:eq('+columnReferences['attachmentsClip']+')', nRow).html() + '  <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>');
 
-							if ( aData['status'] == 'Open' || aData['status'] == 'Reopened' )
-									$('td:eq('+columnReferences['actions']+')', nRow).html( '<center><button type="button" id="action'+ aData['id'] +'" class="btn btn-default">Mark In Progress</button></center>' );
-							if ( aData['status'] == 'In Progress' )
-									$('td:eq('+columnReferences['actions']+')', nRow).html( '<center><button type="button" id="action'+ aData['id'] +'" class="btn btn-default">Mark Resolved</button></center>' );
+							$('td:eq(5)', nRow).html('<button class="actionBtn" data-action="1" type="button" id="'+ aData['id'] +'" class="btn btn-default" title="Open"><small style="pointer-events:none;">O</small></button>'+
+													 '<button class="actionBtn" data-action="2" type="button" id="'+ aData['id'] +'" class="btn btn-default" title="In Progress"><small style="pointer-events:none;">P</small></button>'+
+													 '<button class="actionBtn" data-action="3" type="button" id="'+ aData['id'] +'" class="btn btn-default" title="Resolved"><small style="pointer-events:none;">R</small></button>'+
+													 '<button class="actionBtn" data-action="4" type="button" id="'+ aData['id'] +'" class="btn btn-default" title="Closed"><small style="pointer-events:none;">C</small></button>'
+							);
 				    }
-			    });		
+			    });
+				$('#example').css('visibility', 'visible');
+
+				$('.actionBtn').click(function(e){
+					var formData = new FormData();
+					formData.append('threadId', e.target.id);
+					formData.append('isSystemMessage', 4);
+					formData.append('status', $(e.target).data('action'));
+
+					$.ajax({
+						type: "POST",
+						url: "proxy.php?service=postMessage",
+						data: formData,
+						success: function(data) {
+							modalAndReload(data, false);
+						},
+						contentType: "multipart/mixed; boundary=frontier",
+						//contentType: false,
+		    			processData: false
+					});
+				});
 			});
 		}
 	
@@ -226,7 +248,7 @@
 				$("#myModal").modal("hide");
 			}, 2500);
 			if(!stay)
-				getThreads();
+				getThreads('');
 		}
 
 		var options = [];
