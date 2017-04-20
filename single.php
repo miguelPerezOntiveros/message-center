@@ -266,23 +266,23 @@
 				$('#status').html('Status: <b>' + message[0].status + '</b>.');
 
 				if(window.type == 'supervisors' ){
-					$('#changeStatus').html("<option value='1'>Open</option>");
-					$('#changeStatus').html("<option value='2'>In Progress</option>");
-					$('#changeStatus').html("<option value='3'>Resolved</option>");
-					$('#changeStatus').html("<option value='4'>Closed</option>");
+					$('#changeStatus').append("<option value='1'>Open</option>");
+					$('#changeStatus').append("<option value='2'>In Progress</option>");
+					$('#changeStatus').append("<option value='3'>Resolved</option>");
+					$('#changeStatus').append("<option value='4'>Closed</option>");
 				} else if(window.type == 'csrs') {
 					if(message[0].status == 'Open'){
-						$('#changeStatus').html("<option value='2'>In Progress</option>");
+						$('#changeStatus').append("<option value='2'>In Progress (The thread will be assigned to you)</option>");
 					}
 					if(message[0].status == 'In Progress'){
-						$('#changeStatus').html("<option value='3'>Resolved</option>");
+						$('#changeStatus').append("<option value='3'>Resolved</option>");
 					}
 				} else if(window.type == 'customers') {
 					if(message[0].status != 'Closed'){
-						$('#changeStatus').html("<option value='4'>Closed</option>");
+						$('#changeStatus').append("<option value='4'>Closed (You will not be able to reopen this thread)</option>");
 					}
 					if(message[0].status == 'Resolved'){
-						$('#changeStatus').html("<option value='2'>In Progress</option>");	
+						$('#changeStatus').append("<option value='2'>In Progress</option>");	
 					}
 				}
 											
