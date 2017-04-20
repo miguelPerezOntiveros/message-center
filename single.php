@@ -154,17 +154,25 @@
 										<label for="changeStatus">New Status</label>
 										<select  class="form-control" id="changeStatus" name="status">
 											<?php 
-												if($_SESSION['type'] == 'supervisors'){
+												if($_SESSION['type'] == 'supervisors' ){
 													echo "<option value='1'>Open</option>";
-												}
-												echo "<option value='2'>In Progress</option>";
-												if($_SESSION['type'] != 'customers'){
+													echo "<option value='2'>In Progress</option>";
 													echo "<option value='3'>Resolved</option>";
-												}
-												if($_SESSION['type'] == 'supervisors'){
 													echo "<option value='4'>Closed</option>";
-												} else {
-													echo "<option value='4'>Closed (You will not be able to re-open)</option>";
+												} else if($_SESSION['type'] == 'csrs' ) {
+													if($('#status').html().indexOf('Open') != -1){
+														echo "<option value='2'>In Progress</option>";
+													}
+													if($('#status').html().indexOf('In Progress') != -1){
+														echo "<option value='3'>Resolved</option>";
+													}
+												} else if($_SESSION['type'] == 'customers' ) {
+													if($('#status').html().indexOf('Closed') == -1){
+														echo "<option value='4'>Closed</option>";
+													}
+													if($('#status').html().indexOf('Resolved') != -1){
+														echo "<option value='2'>In Progress</option>";	
+													}
 												}
 											?>
 											
