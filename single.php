@@ -152,31 +152,8 @@
 									<input type="hidden" name="isSystemMessage" value="4">
 									<div class="form-group">
 										<label for="changeStatus">New Status</label>
-										<select  class="form-control" id="changeStatus" name="status">
-											<?php 
-												if($_SESSION['type'] == 'supervisors' ){
-													echo "<option value='1'>Open</option>";
-													echo "<option value='2'>In Progress</option>";
-													echo "<option value='3'>Resolved</option>";
-													echo "<option value='4'>Closed</option>";
-												} else if($_SESSION['type'] == 'csrs' ) {
-													if($('#status').html().indexOf('Open') != -1){
-														echo "<option value='2'>In Progress</option>";
-													}
-													if($('#status').html().indexOf('In Progress') != -1){
-														echo "<option value='3'>Resolved</option>";
-													}
-												} else if($_SESSION['type'] == 'customers' ) {
-													if($('#status').html().indexOf('Closed') == -1){
-														echo "<option value='4'>Closed</option>";
-													}
-													if($('#status').html().indexOf('Resolved') != -1){
-														echo "<option value='2'>In Progress</option>";	
-													}
-												}
-											?>
-											
-										</select>
+										<?php echo "<script>window.type='".$_SESSION['type']."';</script>"; ?>
+										<select  class="form-control" id="changeStatus" name="status"></select>
 			    					</div>
 									<div class="form-group">
 										<label for="changeStatusMessage">Message</label>
@@ -287,6 +264,28 @@
 					$('#delegate').html('This thread is currently being delegated to: <b>'+message[0].delegate+'</b>.');
 				
 				$('#status').html('Status: <b>' + message[0].status + '</b>.');
+
+				if(window.type == 'supervisors' ){
+					$('#changeStatus').html("<option value='1'>Open</option>");
+					$('#changeStatus').html("<option value='2'>In Progress</option>");
+					$('#changeStatus').html("<option value='3'>Resolved</option>");
+					$('#changeStatus').html("<option value='4'>Closed</option>");
+				} else if(window.type == 'csrs') {
+					if(message[0].status == 'Open'){
+						$('#changeStatus').html("<option value='2'>In Progress</option>");
+					}
+					if(message[0].status == 'In Progress'){
+						$('#changeStatus').html("<option value='3'>Resolved</option>");
+					}
+				} else if(window.type == 'customers') {
+					if(message[0].status != 'Closed'){
+						$('#changeStatus').html("<option value='4'>Closed</option>");
+					}
+					if(message[0].status == 'Resolved'){
+						$('#changeStatus').html("<option value='2'>In Progress</option>");	
+					}
+				}
+											
 				if(message[0].priority)
 					$('#priority').html('Priority: <b>' + message[0].priority + '</b>.');
 
