@@ -37,7 +37,7 @@
 					                <th>Status</th>
 					                <th>Priority</th>
 					                <th>attachment</th>
-					                <th>Actions</th>
+					                <th>Mark as</th>
 					            </tr>
 					        </thead>
 					        <tfoot>
@@ -49,7 +49,7 @@
 					                <th>Status</th>
 					                <th>Priority</th>
 					                <th>attachment</th>
-					                <th>Actions</th>
+					                <th>Mark as</th>
 					            </tr>
 					        </tfoot>
 					    </table>
@@ -68,9 +68,10 @@
 				if(table != null)
 					table.destroy();
 				var invisibles = [0, 6];
-				var columnReferences = {"attachmentsClip": 1, "actions": 5};
+				var columnReferences = {"attachmentsClip": 1, "markAs": 5};
 				if(!own){
 					invisibles.push(1);
+					invisibles.push(7);
 					for(var reference in columnReferences) {
 						columnReferences[reference]--;
 					}
@@ -106,9 +107,9 @@
 									$('td:eq('+columnReferences['attachmentsClip']+')', nRow).html( $('td:eq('+columnReferences['attachmentsClip']+')', nRow).html() + '  <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>');
 
 								if ( aData['status'] == 'Open' )
-										$('td:eq('+columnReferences['actions']+')', nRow).html( '<center><button class="actionBtn"  data-action="2" type="button" id="'+ aData['id'] +'" class="btn btn-default">Mark In Progress</button></center>' );
+										$('td:eq('+columnReferences['markAs']+')', nRow).html('<a class="actionBtn" data-action="2" type="button" id="'+ aData['id'] +'" href="#">In Progress</button>' );
 								if ( aData['status'] == 'In Progress' )
-										$('td:eq('+columnReferences['actions']+')', nRow).html( '<center><button class="actionBtn"  data-action="3" type="button" id="'+ aData['id'] +'" class="btn btn-default">Mark Resolved</button></center>' );
+										$('td:eq('+columnReferences['markAs']+')', nRow).html('<a class="actionBtn" data-action="3" type="button" id="'+ aData['id'] +'" href="#">Resolved</button>' );
 					    }
 				    });	
 					$('#example').css('visibility', 'visible');
@@ -160,7 +161,7 @@
 					$("#myModal").modal("hide");
 				}, 2500);
 				if(!stay)
-					getThreads();
+					getThreads($('#checkbox').is(":checked"));
 			}
 		} );
 	</script>

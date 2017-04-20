@@ -87,7 +87,7 @@
 					                <th>Status</th>
 					                <th>Priority</th>
 					                <th>attachment</th>
-					                <th>Actions</th>
+					                <th>Marks as</th>
 					            </tr>
 					        </thead>
 					        <tfoot>
@@ -99,7 +99,7 @@
 					                <th>Status</th>
 					                <th>Priority</th>
 					                <th>attachment</th>
-					                <th>Actions</th>
+					                <th>Mark as</th>
 					            </tr>
 					        </tfoot>
 					    </table>

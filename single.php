@@ -61,7 +61,7 @@
 									<input type="hidden" name="threadId" value=<?php echo $_GET['id']; ?> >
 									<input type="hidden" name="isSystemMessage" value="2">
 									<div class="form-group">
-										<label for="changeOwner">Owner</label>
+										<label for="changeOwner">New Owner</label>
 			    						<input type='text' onKeyUp="completeCsr('csrs', '#changeOwner', '#ownerOptions')" class="form-control" name="ownerId" id="changeOwner"></textarea>
 			    						<div class='options' id='ownerOptions'></div>
 			    					</div>
@@ -92,7 +92,7 @@
 									<input type="hidden" name="threadId" value=<?php echo $_GET['id']; ?> >
 									<input type="hidden" name="isSystemMessage" value="1">
 									<div class="form-group">
-										<label for="changeDelegate">Delegate</label>
+										<label for="changeDelegate">New Delegate</label>
 			    						<input type='text' onKeyUp="completeCsr('csrs', '#changeDelegate', '#delegateOptions')" class="form-control" name="delegateId" id="changeDelegate">
 			    						<div class='options' id="delegateOptions"></div>
 			    					</div>
@@ -122,7 +122,7 @@
 									<input type="hidden" name="threadId" value=<?php echo $_GET['id']; ?> >
 									<input type="hidden" name="isSystemMessage" value="3">
 									<div class="form-group">
-										<label for="changePriority">Priority</label>
+										<label for="changePriority">New Priority</label>
 			    						<input type='text' class="form-control" name="priority" id="changePriority">
 			    					</div>
 									<div class="form-group">
@@ -151,8 +151,24 @@
 									<input type="hidden" name="threadId" value=<?php echo $_GET['id']; ?> >
 									<input type="hidden" name="isSystemMessage" value="4">
 									<div class="form-group">
-										<label for="changeStatus">Status</label>
-			    						<input type='text' class="form-control" name="status" id="changeStatus"></textarea>
+										<label for="changeStatus">New Status</label>
+										<select  class="form-control" id="changeStatus" name="status">
+											<?php 
+												if($_SESSION['type'] == 'supervisors'){
+													echo "<option value='1'>Open</option>";
+												}
+												echo "<option value='2'>In Progress</option>";
+												if($_SESSION['type'] != 'customers'){
+													echo "<option value='3'>Resolved</option>";
+												}
+												if($_SESSION['type'] == 'supervisors'){
+													echo "<option value='4'>Closed</option>";
+												} else {
+													echo "<option value='4'>Closed (You will not be able to re-open)</option>";
+												}
+											?>
+											
+										</select>
 			    					</div>
 									<div class="form-group">
 										<label for="changeStatusMessage">Message</label>

@@ -51,7 +51,7 @@
 					                <th>Updated</th>
 					                <th>Status</th>
 					                <th>attachment</th>
-					                <th>Actions</th>
+					                <th>Mark as</th>
 					            </tr>
 					        </thead>
 					        <tfoot>
@@ -62,7 +62,7 @@
 					                <th>Updated</th>
 					                <th>Status</th>
 					                <th>attachment</th>
-					                <th>Actions</th>
+					                <th>Mark as</th>
 					            </tr>
 					        </tfoot>
 					    </table>
@@ -125,19 +125,20 @@
 									$('td', nRow).css( 'font-weight', 'bold');
 
 								if ( aData['hasAttachments'] == 1 && $('td:eq(1)', nRow).find('span').length == 0) 
-										$('td:eq(1)', nRow).html( $('td:eq(1)', nRow).html() + '<span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>');
+										$('td:eq(1)', nRow).html( $('td:eq(1)', nRow).html() + '  <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>');
 
 								switch(aData['status']) {
 									case 'Open':
 									case 'Closed': 
-										$('td:eq(4)', nRow).html( '<font color="grey"><small>N/A</small><font color="grey">' );
+										$('td:eq(4)', nRow).html('<font color="grey"><small>N/A</small><font color="grey">' );
 									break;
 									case 'Resolved': 
-										$('td:eq(4)', nRow).html('<button class="actionBtn" data-action="4" type="button" id="'+ aData['id'] +'" class="btn btn-default" title="Close">Close</button>' +
-																 '<button class="actionBtn" data-action="2" type="button" id="'+ aData['id'] +'" class="btn btn-default" title="Reopen">Reopen</button>' );
+										$('td:eq(4)', nRow).html('<a class="actionBtn" data-action="2" type="button" id="'+ aData['id'] +'" href="#">In Progress</button><br>'+
+											'<a class="actionBtn" data-action="4" type="button" id="'+ aData['id'] +'" href="#">Closed</button>'
+										);
 									break;
 									default:
-										$('td:eq(4)', nRow).html( '<button class="actionBtn" data-action="4" type="button" id="'+ aData['id'] +'" class="btn btn-default" title="Close">Close</button>' );
+										$('td:eq(4)', nRow).html('<a class="actionBtn" data-action="4" type="button" id="'+ aData['id'] +'" href="#">Closed</button>');
 									break;
 								}
 						    }
@@ -148,7 +149,7 @@
 						var formData = new FormData();
 						formData.append('threadId', e.target.id);
 						formData.append('isSystemMessage', 4);
-						formData.append('status', 4); //closed
+						formData.append('status', $(e.target).data('action')); //closed
 						
 						$.ajax({
 							type: "POST",
