@@ -33,7 +33,7 @@
 		case 'postMessage': 
 			$url = $base_url.'message';
 			curl_setopt($ch, CURLOPT_POST, 1);
-			$body = utf8_decode(@file_get_contents('php://input'));
+			$body = @file_get_contents('php://input');
 			
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $body);                                                                    
 		break;
