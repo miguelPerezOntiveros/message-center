@@ -40,7 +40,7 @@
 						<a id="choosePriority" onclick='$("#priorityModal").modal("show");' class="hidden"><button style="width: 100%;" type="button" class="btn btn-primary">Change Priority</button></a>
 					</div>
 					<div class="col-md-2 newInquiry">
-						<a id="chooseStatus" onclick='$("#statusModal").modal("show");'><button style="width: 100%;" type="button" class="btn btn-primary">Change Status</button></a>
+						<a id="chooseStatus" onclick='$("#statusModal").modal("show");' class="hidden"><button style="width: 100%;" type="button" class="btn btn-primary">Change Status</button></a>
 					</div>
 				</div>
 
@@ -213,17 +213,23 @@
 		<?php 
 			if($_SESSION['type'] == 'csrs'){
 				echo "
-						$('#chooseDelegate').removeClass('hidden');
-						$('#chooseStatus').removeClass('hidden');
+					var showButtons = function(status){
+						if(status != 'Open'){
+							$('#chooseDelegate').removeClass('hidden');
+							$('#chooseStatus').removeClass('hidden');
+						}
 						$('#choosePriority').removeClass('hidden');
+					}
 					";
 			}
 			if($_SESSION['type'] == 'supervisors'){
 				echo "
+					var showButtons = function(){
 						$('#chooseOwner').removeClass('hidden');
 						$('#chooseDelegate').removeClass('hidden');
 						$('#chooseStatus').removeClass('hidden');
 						$('#choosePriority').removeClass('hidden');
+					}
 					";
 			}
 		?>
@@ -265,9 +271,11 @@
 				
 				$('#status').html('Status: <b>' + message[0].status + '</b>.');
 
+				$('#changeStatus').html('');
 				if(window.type == 'supervisors' ){
 					$('#changeStatus').append("<option value='1'>Open</option>");
-					$('#changeStatus').append("<option value='2'>In Progress</option>");
+					if(message[0].status != 'Open')
+						$('#changeStatus').append("<option value='2'>In Progress</option>");
 					$('#changeStatus').append("<option value='3'>Resolved</option>");
 					$('#changeStatus').append("<option value='4'>Closed</option>");
 				} else if(window.type == 'csrs') {
@@ -363,7 +371,8 @@
 						}
 					});
 				}
-			});			
+				showButtons(message[0].status);		
+			});
 		}
 		getMessages();
 
