@@ -82,6 +82,24 @@
 		   	$('#fileLabel').text(log);
 		});
 		$(document).ready(function() {
+			Window.actionBtnClick = function(e){
+				var formData = new FormData();
+				formData.append('threadId', $(e.target).data('id'));
+				formData.append('isSystemMessage', 4);
+				formData.append('status', $(e.target).data('action')); //closed
+				
+				$.ajax({
+					type: "POST",
+					url: "proxy.php?service=postMessage",
+					data: formData,
+					success: function(data) {
+						modalAndReload(data, false);
+					},
+					contentType: "multipart/mixed; boundary=frontier",
+					//contentType: false,
+	    			processData: false
+				});
+			};
 
 			myToggle = function (){
 				$('.formToToggle').toggle('slow');
@@ -133,36 +151,17 @@
 										$('td:eq(4)', nRow).html('<font color="grey"><small>N/A</small><font color="grey">' );
 									break;
 									case 'Resolved': 
-										$('td:eq(4)', nRow).html('<a class="actionBtn" data-action="2" type="button" id="'+ aData['id'] +'" href="#">In Progress</button><br>'+
-											'<a class="actionBtn" data-action="4" type="button" id="'+ aData['id'] +'" href="#">Closed</button>'
+										$('td:eq(4)', nRow).html('<a onclick="Window.actionBtnClick(event)" data-action="2" type="button" data-id="'+ aData['id'] +'" href="#">In Progress</button><br>'+
+											'<a onclick="Window.actionBtnClick(event)" data-action="4" type="button" data-id="'+ aData['id'] +'" href="#">Closed</button>'
 										);
 									break;
 									default:
-										$('td:eq(4)', nRow).html('<a class="actionBtn" data-action="4" type="button" id="'+ aData['id'] +'" href="#">Closed</button>');
+										$('td:eq(4)', nRow).html('<a onclick="Window.actionBtnClick(event)" data-action="4" type="button" data-id="'+ aData['id'] +'" href="#">Closed</button>');
 									break;
 								}
 						    }
 					    });
 					$('#example').css('visibility', 'visible');
-
-					$('.actionBtn').click(function(e){
-						var formData = new FormData();
-						formData.append('threadId', e.target.id);
-						formData.append('isSystemMessage', 4);
-						formData.append('status', $(e.target).data('action')); //closed
-						
-						$.ajax({
-							type: "POST",
-							url: "proxy.php?service=postMessage",
-							data: formData,
-							success: function(data) {
-								modalAndReload(data, false);
-							},
-							contentType: "multipart/mixed; boundary=frontier",
-							//contentType: false,
-			    			processData: false
-						});
-					});
 				});
 			}
 	

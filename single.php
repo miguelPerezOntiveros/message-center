@@ -222,7 +222,7 @@
 					}
 					";
 			}
-			if($_SESSION['type'] == 'supervisors'){
+			else if($_SESSION['type'] == 'supervisors'){
 				echo "
 					var showButtons = function(){
 						$('#chooseOwner').removeClass('hidden');
@@ -232,6 +232,14 @@
 					}
 					";
 			}
+			else if($_SESSION['type'] == 'customers'){
+				echo "
+					var showButtons = function(){
+						$('#chooseStatus').removeClass('hidden');
+					}
+					";
+			}
+
 		?>
 
 		var defaultMessages = [
@@ -245,6 +253,7 @@
 		function getMessages(){
 			$.get(<?php echo '"proxy.php?service=getMessages&threadId='.$_GET['id'].'"'; ?>, function( data ) {
 				message = $.parseJSON(data);
+				showButtons(message[0].status);	
 				if(message.error){
 					$('#humanModalMessage').html('<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><span class="sr-only"></span>&nbsp;Error: '+message.error+'</div>');
 					console.log(message.error);
@@ -282,8 +291,11 @@
 					if(message[0].status == 'Open'){
 						$('#changeStatus').append("<option value='2'>In Progress (The thread will be assigned to you)</option>");
 					}
-					if(message[0].status == 'In Progress'){
+					else if(message[0].status == 'In Progress'){
 						$('#changeStatus').append("<option value='3'>Resolved</option>");
+					}
+					else {
+						$('#chooseStatus').addClass('hidden');
 					}
 				} else if(window.type == 'customers') {
 					if(message[0].status != 'Closed'){
@@ -371,7 +383,6 @@
 						}
 					});
 				}
-				showButtons(message[0].status);		
 			});
 		}
 		getMessages();

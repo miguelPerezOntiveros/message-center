@@ -1,0 +1,40 @@
+
+
+170427 15:49:43	 5572 Connect	root@172.16.0.118 on message_center
+		 5572 Query	/* mysql-connector-java-5.1.40 ( Revision: 402933ef52cad9aa82624e80acbea46e3a701ce6 ) */SELECT  @@session.auto_increment_increment AS auto_increment_increment, @@character_set_client AS character_set_client, @@character_set_connection AS character_set_connection, @@character_set_results AS character_set_results, @@character_set_server AS character_set_server, @@init_connect AS init_connect, @@interactive_timeout AS interactive_timeout, @@license AS license, @@lower_case_table_names AS lower_case_table_names, @@max_allowed_packet AS max_allowed_packet, @@net_buffer_length AS net_buffer_length, @@net_write_timeout AS net_write_timeout, @@query_cache_size AS query_cache_size, @@query_cache_type AS query_cache_type, @@sql_mode AS sql_mode, @@system_time_zone AS system_time_zone, @@time_zone AS time_zone, @@tx_isolation AS tx_isolation, @@wait_timeout AS wait_timeout
+		 5572 Query	SET NAMES latin1
+		 5572 Query	SET character_set_results = NULL
+		 5572 Query	SET autocommit=1
+		 5572 Query	SET autocommit=0
+		 5572 Query	select @@session.tx_read_only
+		 5572 Query	INSERT INTO thread (id, priority, seen, status, subject, userUid ) VALUES ('1493326183910',5,4,1,'asd','jose.perez')
+		 5572 Query	select @@session.tx_read_only
+		 5572 Query	INSERT INTO message (authorUid, authorRole, id, isSystemMessage, message, seen, threadId ) VALUES ('jose.perez','1',1493326183910,0,'zxc',4,'1493326183910')
+		 5572 Query	commit
+		 5572 Query	rollback
+		 5572 Quit	
+170427 15:49:44	 5573 Connect	root@172.16.0.118 on message_center
+		 5573 Query	/* mysql-connector-java-5.1.40 ( Revision: 402933ef52cad9aa82624e80acbea46e3a701ce6 ) */SELECT  @@session.auto_increment_increment AS auto_increment_increment, @@character_set_client AS character_set_client, @@character_set_connection AS character_set_connection, @@character_set_results AS character_set_results, @@character_set_server AS character_set_server, @@init_connect AS init_connect, @@interactive_timeout AS interactive_timeout, @@license AS license, @@lower_case_table_names AS lower_case_table_names, @@max_allowed_packet AS max_allowed_packet, @@net_buffer_length AS net_buffer_length, @@net_write_timeout AS net_write_timeout, @@query_cache_size AS query_cache_size, @@query_cache_type AS query_cache_type, @@sql_mode AS sql_mode, @@system_time_zone AS system_time_zone, @@time_zone AS time_zone, @@tx_isolation AS tx_isolation, @@wait_timeout AS wait_timeout
+		 5573 Query	SET NAMES latin1
+		 5573 Query	SET character_set_results = NULL
+		 5573 Query	SET autocommit=1
+		 5573 Query	SELECT 
+    thread.id, 
+    thread.subject, 
+    concat_ws(' ', hiu.cn, hiu.sn) hiu, 
+    concat_ws(' ', employee.cn, employee.sn) owner, 
+    concat_ws(' ', delegate.cn, delegate.sn) delegate, 
+    thread.seen, 
+    thread.hasAttachments, 
+    thread.lastUpdated, 
+    priority.name priority, 
+    status.name status 
+FROM thread 
+inner join priority on priority.id = thread.priority 
+inner join status on status.id = thread.status 
+inner join user hiu on hiu.uid = thread.userUid 
+left join user employee on employee.uid = thread.ownerUid 
+left join user delegate on delegate.uid = thread.delegateUid
+where userUid = 'jose.perez'
+order by lastUpdated desc
+		 5573 Quit	

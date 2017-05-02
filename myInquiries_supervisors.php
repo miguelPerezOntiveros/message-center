@@ -122,6 +122,24 @@
 
 		var table = null;
 		function getThreads(qs) {
+			Window.actionBtnClick = function(e){
+				var formData = new FormData();
+				formData.append('threadId', $(e.target).data('id'));
+				formData.append('isSystemMessage', 4);
+				formData.append('status', $(e.target).data('action')); //closed
+				
+				$.ajax({
+					type: "POST",
+					url: "proxy.php?service=postMessage",
+					data: formData,
+					success: function(data) {
+						modalAndReload(data, false);
+					},
+					contentType: "multipart/mixed; boundary=frontier",
+					//contentType: false,
+	    			processData: false
+				});
+			};
 			$('#example').css('visibility', 'hidden');
 			if(table != null)
 				table.destroy();
@@ -140,7 +158,8 @@
 						"order": [[ 3, "desc" ]],
 						"columns": [
 				            { data: "id" },
-				            { data: "ownerUid", "defaultContent": "" },
+				            { data: "customer", "defaultContent": "" },
+				            //{ data: "csr", "defaultContent": "" },
 				            { data: "subject", render: function (data, type, full, meta) {return "<a href='single.php?id="+full.id+"'>"+ data +"</a>"; } },
 				            { data: "lastUpdated" },
 				            { data: "status" },
@@ -159,33 +178,19 @@
 							if ( aData['hasAttachments'] == 1 && $('td:eq('+columnReferences['attachmentsClip']+')', nRow).find('span').length == 0) 
 								$('td:eq('+columnReferences['attachmentsClip']+')', nRow).html( $('td:eq('+columnReferences['attachmentsClip']+')', nRow).html() + '  <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>');
 
-							$('td:eq(5)', nRow).html('<button class="actionBtn" data-action="1" type="button" id="'+ aData['id'] +'" class="btn btn-default" title="Open"><small style="pointer-events:none;">O</small></button>'+
-													 '<button class="actionBtn" data-action="2" type="button" id="'+ aData['id'] +'" class="btn btn-default" title="In Progress"><small style="pointer-events:none;">P</small></button>'+
-													 '<button class="actionBtn" data-action="3" type="button" id="'+ aData['id'] +'" class="btn btn-default" title="Resolved"><small style="pointer-events:none;">R</small></button>'+
-													 '<button class="actionBtn" data-action="4" type="button" id="'+ aData['id'] +'" class="btn btn-default" title="Closed"><small style="pointer-events:none;">C</small></button>'
+							$('td:eq(5)', nRow).html('<button onclick="Window.actionBtnClick(event)" data-action="1" type="button" data-id="'+ aData['id'] +'" class="btn btn-default" title="Open"><small style="pointer-events:none;">O</small></button>'+
+													(aData['customer'] != undefined?
+														'<button onclick="Window.actionBtnClick(event)" data-action="2" type="button" data-id="'+ aData['id'] +'" class="btn btn-default" title="In Progress"><small style="pointer-events:none;">P</small></button>'
+														:
+														''
+													)
+													 +
+													 '<button onclick="Window.actionBtnClick(event)" data-action="3" type="button" data-id="'+ aData['id'] +'" class="btn btn-default" title="Resolved"><small style="pointer-events:none;">R</small></button>'+
+													 '<button onclick="Window.actionBtnClick(event)" data-action="4" type="button" data-id="'+ aData['id'] +'" class="btn btn-default" title="Closed"><small style="pointer-events:none;">C</small></button>'
 							);
 				    }
 			    });
 				$('#example').css('visibility', 'visible');
-
-				$('.actionBtn').click(function(e){
-					var formData = new FormData();
-					formData.append('threadId', e.target.id);
-					formData.append('isSystemMessage', 4);
-					formData.append('status', $(e.target).data('action'));
-
-					$.ajax({
-						type: "POST",
-						url: "proxy.php?service=postMessage",
-						data: formData,
-						success: function(data) {
-							modalAndReload(data, false);
-						},
-						contentType: "multipart/mixed; boundary=frontier",
-						//contentType: false,
-		    			processData: false
-					});
-				});
 			});
 		}
 	
