@@ -2,5 +2,7 @@ to check current schemas: ls -l /var/www/html/ldif/
 to add the inetorgperson schema: ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif
 to run the ldif that enables the overlay: ldapadd -Q -Y EXTERNAL -H ldapi:/// -f memberof_config.ldif
 
+to load an .ldif file: ldapadd -x -D "cn=root,dc=boomi-base22,dc=com" -W -f addGroups.ldif 
+
 to change passwords:
 ldappasswd -h 127.0.0.1 -x -D "cn=root,dc=boomi-base22,dc=com" -W -S "uid=ken.rokicki,ou=users,dc=boomi-base22,dc=com"
