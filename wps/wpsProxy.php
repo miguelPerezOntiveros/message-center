@@ -16,6 +16,13 @@
 		case 'getFile': 
 			$url = $base_url.'file?key='.urlencode($_GET['key']);
 		break;
+		case 'deleteFile': 
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+			$url = $base_url.'file?key='.urlencode($_GET['key']);
+			error_log('$baseURL: '.$base_url);
+			error_log('url: '.$url);
+
+		break;
 		case 'postFile': 
 			$url = $base_url.'file';
 			curl_setopt($ch, CURLOPT_POST, 1);
@@ -25,9 +32,6 @@
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 	    		'Content-Type: multipart/mixed; boundary=frontier'
     		));
-			error_log('');
-			error_log($body);
-			error_log('');
 		break;
 	};
 
