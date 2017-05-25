@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>My S3 Bucket</title>
+	<!-- jQuery -->
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+	<!-- jQuery dataTables -->
+	<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+	<link href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet">
+	<!-- Bootstrap -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+	<!-- Custom css -->
+	<link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+	<!-- menu -->
+	<div style="background-color: #f0f0f0">		
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="col-lg-4">
+						<a href="index.php"><img src="img/logo.png" width="150em" alt="logo" style="padding-top: 1em;"></a>
+					</div>
+					<div class="col-lg-4">
+						<div class="menu">
+							Welcome <b>José Miguel Pérez Ontiveros</b>!	
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="menu">
+								<a href="index.php">Home</a>
+								<a href="myInquiries.php" style="color: #1173BD; border-bottom: #1173BD solid 4px;">My Bucket</a>
+								<a href="logIn.php">Log Out</a>
+						</div>
+					</div>
+					<br><br><br>
+				</div>
+			</div>
+		</div>
+
+		<div style="border-top: #1173BD solid 0.1em;"></div>
+	</div><!-- /menu -->
+	<!-- modals -->
+	<div id="myModal" class="modal fade bs-example-modal-lg in" role="dialog" tabindex="-1" aria-labelledby="myLargeModalLabel">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+					<h4  id="myModalTitle" class="modal-title" id="myLargeModalLabel"></h4>
+				</div>
+				<div class="modal-body">
+					<div>
+						<blockquote id="myModalBody"></blockquote>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<b>Last Modified: </b><span id="myModalLastModified"></span>					
+						</div>
+						<div class="col-md-6">
+							<b>Size: </b><span id="myModalSize"></span>						
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade in" id="feedbackModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" id='feedbackModalBody' role="document">
+		</div>
+	</div>
+	<!-- /modals -->
+	<div class="container">
+		<div class="row">
+			<br>
+			<div class="col-lg-12 bs-callout-left">
+				<h2 id="bucketName"></h2>
+			</div>
+			<div class="col-lg-12">
+				<span id="breadcrumbs"></span>
+			</div>
+			<div class="col-md-12">
+				<br>
+				<br>
+				<table id="table" class="display" width="100%" cellspacing="0">
+			        <thead>
+			            <tr>
+			                <th>File Name</th>
+			                <th>Last Modified</th>
+			                <th>size</th>
+			            </tr>
+			        </thead>
+			        <tfoot>
+			            <tr>
+			                <th>File Name</th>
+			                <th>Last Modified</th>
+			                <th>size</th>
+			            </tr>
+			        </tfoot>
+			    </table>
+			</div>
+			<div class="col-md-12 newInquiry" id='callout'>
+				<button type="button" id="createBtn" onclick="toggleForm();" class="btn btn-primary">Upload new File</button>
+				<form class="formToToggle" id="uploadForm">
+					<br>
+					<div>
+						<input type="radio" name="source" value="form" checked> Form
+						<div class="form-group" style="margin-left: 5em">
+							<label for="InquirySubject">File Name</label>
+							<input type="text" name="fileName" class="form-control couldBeDisabled" id="fileNameInput" placeholder="Enter subject" requred>
+							<small class="form-text text-muted">Cannot be changed once submitted.</small>
+						</div>
+						<div class="form-group" style="margin-left: 5em">
+							<label for="InquiryBody">File Contents</label>
+							<textarea name="fileBody" class="form-control couldBeDisabled" id="fileBodyInput" rows="3" placeholder="Enter body" required></textarea>
+						</div>
+					</div>
+					<div>
+						<input type="radio" name="source" value="disk"> Browse
+						<div class="form-group" style="margin-left: 5em">
+							<label class="btn btn-default btn-file couldBeDisabled" disabled>
+							    Browse <input type="file" name="attachments" id="fileInput" style="display: none;" class="couldBeDisabled" disabled>
+							</label>&nbsp;<span id='fileLabel'></span>
+						</div>
+					</div>
+					<button style='float:right;' type="submit" class="btn btn-primary">Submit</button>
+					<br>
+					<script>
+						$("input[name=source]:radio").change(function () {
+							$('.couldBeDisabled').attr('disabled', function(i, v) { return !v; });
+						})
+					</script>
+				</form>
+			</div>
+		</div>
+	</div>
+	<script>
+		$(document).on('change', ':file', function() {
+		    var input = $(this),
+		        numFiles = input.get(0).files ? input.get(0).files.length : 1,
+		        label = input.val().replace(/\\/g, '/').replace(/.*\//, ''),
+		   	 	log = numFiles > 1 ? numFiles + ' files selected' : label;
+		   	$('#fileLabel').text(log);
+		});
+		$(document).ready(function() {
+			$('#uploadForm').on('submit', function(e){
+				e.preventDefault();
+				var formData = new FormData($('#uploadForm')[0]);
+				formData.append('cd', cd.slice(0,-1));
+				$.ajax({
+					type: "POST",
+					url: "wpsProxy.php?service=postFile",
+					data: formData,
+					success: function(data) {
+						console.log('Upload: ' + data);
+						showResponseModal(data);
+						$('#fileNameInput').val('');
+						$('#fileBodyInput').val('');
+						$('#fileInput').val('');
+					},
+					contentType: "multipart/mixed; boundary=frontier",
+					//contentType: false,
+	    			processData: false
+				});
+				toggleForm();
+			});
+			function showResponseModal(response) {
+				response = JSON.parse(response);
+				if(response.error){
+					$('#feedbackModalBody').html('<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><span class="sr-only"></span>&nbsp;Error: '+response.error+'</div>');
+				}
+				else{
+					$('#feedbackModalBody').html('<div class="alert alert-success" role="alert"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span><span class="sr-only"></span>&nbsp;'+response.success+'</div>');
+					getListing(cd);
+					setTimeout(function(){ $("#feedbackModal").modal("hide"); }, 2500);		
+				}
+				$("#feedbackModal").modal("show");
+			}
+			getFile = function(key, fileName, data, lastModified, size){
+				$.get("wpsProxy.php?service=getFile&key="+key, function(data){
+					$('#myModalTitle').text(fileName);
+					$('#myModalBody').text(data);
+					$('#myModalLastModified').text(lastModified);
+					$('#myModalSize').text(size);
+					$('#myModal').modal('show');
+				});
+			}
+			var cd = null;
+			getListing = function(id){
+				$.get("wpsProxy.php?service=getListing&id="+id, function(data){
+					data = JSON.parse(data);
+	        		console.log("Listing: %o", data);
+	        		//cd
+        			cd = id;
+	        		//filter
+	        		if(id=='*')
+	        			id='';
+	        		data = data.filter(function(e){
+	        			return	e.key.indexOf(id) == 0 && 
+	        					e.key.length != id.length &&
+	        					(
+	        						(e.key.match(/\//g) || []).length - (id.match(/\//g) || []).length == 0 ||
+	        						(e.key.match(/\//g) || []).length - (id.match(/\//g) || []).length == 1 && e.key[e.key.length-1] == '/'
+	        					);
+	        		})
+					console.log("Filtered listing: %o", data);
+	        		//breadcrumbs
+	        		breadcrumbs = id.split('/');
+	        		breadcrumbs.splice(-1,1);
+	        		$('#breadcrumbs').html('<a onclick="getListing(\'*\'); return false;">'+data[0].bucketName+'</a>');
+	        		$.each(breadcrumbs, function(i, e){
+	        			console.log("bla>" +e);
+	        			$('#breadcrumbs').append(' > <a onclick="getListing(\''+e+'/\'); return false;">'+e+'</a>');
+	        		})
+	        		//bucket name
+        			$("#bucketName").text(data[0].bucketName);
+        			//table
+        			renderTable(data);
+	        	});
+			}
+			var table = null;
+			renderTable = function(data) {
+				if(table != null)
+					table.destroy();
+				table = $('#table').DataTable( {
+					"data": data,
+			        "columns": [
+			        	{ 	
+			        		"data": "fileName",
+			        		render: function (data, type, full, meta) {
+			        			if(full.isDirectory == 'true'){
+			        				return '<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>&nbsp;&nbsp;<a onclick="getListing(\''+full.key+'\'); return false;">'+full.key.slice(0,-1)+'</a>';
+			        			} else{
+			        				return '<a onclick="getFile(\''+full.key+'\', \''+full.fileName+'\', \''+full.data+'\', \''+full.lastModified+'\', \''+full.size+'\'); return false;">'+data+'</a>';
+			        			}
+			        		}
+			        	},
+			            { "data": "lastModified" },
+			            { "data": "size" }
+			        ]
+			    });
+			}
+			getListing('*');
+		});
+		toggleForm = function (){
+			$('.formToToggle').toggle('slow');
+			$('#callout').toggleClass('bs-callout')
+		};
+		$('.formToToggle').toggle();
+	</script>
+</body>
+</html>
