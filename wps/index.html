@@ -143,6 +143,16 @@
 		</div>
 	</div>
 	<script>
+		var spinnerSVG = function(spikeCount){
+			var spinnerSVG = "<svg id='spinner' width='120px' height='120px' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='xMidYMid' class='uil-default'><rect x='0' y='0' width='100' height='100' fill='none' class='bk'></rect>";
+			for(var i = 0; i < spikeCount; i++)
+				spinnerSVG += 
+					"<rect  x='45.5' y='37.5' width='9' height='25' rx='7' ry='7' fill='#183c5d' transform='rotate("+ i*360/spikeCount +" 50 50) translate(0 -30)'>" + 
+						"<animate attributeName='opacity' from='1' to='0' dur='1s' begin='"+ (-1+i/spikeCount) +"s' repeatCount='indefinite'/>" +
+					"</rect>";
+			spinnerSVG += "</svg>";	
+			return spinnerSVG;
+		}
 		$(document).on('change', ':file', function() {
 		    var input = $(this),
 		        numFiles = input.get(0).files ? input.get(0).files.length : 1,
@@ -152,6 +162,9 @@
 		});
 		$(document).ready(function() {
 			deleteFile = function(key){
+				$('#feedbackModalBody').html('<div align="center"><br><br><br>'+spinnerSVG(10)+'</div>');
+				$('#feedbackModal').modal("show");
+
 				$.ajax({
 					type: "DELETE",
 					url: "wpsProxy.php?service=deleteFile&key="+key,
@@ -165,6 +178,9 @@
 				e.preventDefault();
 				var formData = new FormData($('#uploadForm')[0]);
 				formData.append('cd', cd.slice(0,-1));
+				$('#feedbackModalBody').html('<div align="center"><br><br><br>'+spinnerSVG(10)+'</div>');
+				$('#feedbackModal').modal("show");
+
 				$.ajax({
 					type: "POST",
 					url: "wpsProxy.php?service=postFile",
@@ -175,6 +191,7 @@
 						$('#fileNameInput').val('');
 						$('#fileBodyInput').val('');
 						$('#fileInput').val('');
+						$('#fileLabel').text('');
 					},
 					contentType: "multipart/mixed; boundary=frontier",
 					//contentType: false,
@@ -189,19 +206,22 @@
 				}
 				else{
 					$('#feedbackModalBody').html('<div class="alert alert-success" role="alert"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span><span class="sr-only"></span>&nbsp;'+response.success+'</div>');
-					getListing(cd);
-					setTimeout(function(){ $("#feedbackModal").modal("hide"); }, 1500);		
+					getListing(cd);		
 				}
 				$("#feedbackModal").modal("show");
 			}
 			getFile = function(key, fileName, data, lastModified, size){
-				$.get("wpsProxy.php?service=getFile&key="+key, function(data){
-					$('#myModalTitle').text(fileName);
-					$('#myModalBody').text(data);
-					$('#myModalLastModified').text(lastModified);
-					$('#myModalSize').text(size);
-					$('#myModal').modal('show');
-				});
+				if(fileName.slice(-4) == '.png' || fileName.slice(-4) == '.jpg' || fileName.slice(-5) == '.jpeg' ){
+					window.open("wpsProxy.php?service=getFile&key="+key, '_newtab');
+				} else {
+					$.get("wpsProxy.php?service=getFile&key="+key, function(data){
+						$('#myModalTitle').text(fileName);
+						$('#myModalBody').text(data);
+						$('#myModalLastModified').text(lastModified);
+						$('#myModalSize').text(size);
+						$('#myModal').modal('show');
+					});
+				}
 			}
 			var cd = null;
 			getListing = function(id){
@@ -233,6 +253,8 @@
         			$("#bucketName").text(data[0].bucketName);
         			//table
         			renderTable(data);
+
+        			$("#feedbackModal").modal("hide");
 	        	});
 			}
 			var table = null;
