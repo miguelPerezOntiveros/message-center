@@ -139,7 +139,7 @@
 		
 			$('#checkbox').change(function () {
 			    if ($(this).is(":checked")) {
-					$('#displaying').text('Displaying only items assiged to you.');
+					$('#displaying').text('Displaying only items assigned to you.');
 					getThreads(true);
 			    }
 		        else {
